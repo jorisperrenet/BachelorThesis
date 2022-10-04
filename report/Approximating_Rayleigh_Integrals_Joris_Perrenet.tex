@@ -1,0 +1,147 @@
+% \documentclass[whitelogo, 11pt]{TUD-report2020}
+\documentclass{TUD-report2020}
+
+\usepackage[style=numeric,sorting=none,block=space]{biblatex}
+\addbibresource{report.bib}
+
+\usepackage{changes}
+
+\usepackage[skins, breakable]{tcolorbox}
+\usepackage{mathdots}
+\usepackage{svg}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{MnSymbol}
+\usepackage[toc,page]{appendix}
+\usepackage{tikz}
+\usepackage{tikzscale}
+\usetikzlibrary{calc}
+\usetikzlibrary{fit}
+
+\usepackage{listings}
+% \usepackage{codestyle}
+\usepackage{codestyle}
+\usepackage{mathtools}
+\usepackage{amsthm}
+\usepackage{multirow}
+\usepackage{colortbl}
+\usepackage{hhline}
+
+\usepackage{array}
+\usepackage{microtype}
+\usetikzlibrary{decorations.pathmorphing,decorations.markings,calc}
+
+% For appendix B, the proofs
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{definition}[theorem]{Definition}
+\newcommand{\setminusD}{\mathbin{\backslash}}
+
+% footnote without marker (in preface)
+\newcommand\blfootnote[1]{%
+  \begingroup
+  \renewcommand\thefootnote{}\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \endgroup
+}
+
+% For scaling equation that are too large
+\newcommand\scalemath[2]{\scalebox{#1}{\mbox{\ensuremath{\displaystyle #2}}}}
+
+% Antidiagonal dots
+\DeclareRobustCommand{\Rdots}{\reflectbox{$\ddots$}}
+% \newcommand{\addpage}{
+%     \clearpage
+%     \thispagestyle{empty}
+%     \vspace*{\fill}
+%     \newpage
+% }
+
+%% Hyperlinks are cyan.
+\hypersetup{
+    colorlinks=true,
+    citecolor=title,
+    linkcolor=title,
+    urlcolor=title
+}
+
+\begin{document}
+\renewcommand\UrlFont{\color{tudelft-cyan}\ttfamily}
+\newcommand\Chapter[2]{
+  \chapter[#1: {\itshape#2}]{#1\\[0ex]\Large\itshape#2}
+}
+
+
+%% Use Roman numerals for the page numbers of the title pages and table of
+%% contents.
+\frontmatter
+
+\title[tudelft-black]{Methods for reducing error in approximations of the Rayleigh integral}
+\author[tudelft-white]{Joris Perrenet}
+\coverimage{pictures/real_3d_part_projected}
+\covertext[tudelft-white]{
+    \textbf{Bachelor Thesis 2022}
+}
+
+\makecover
+
+
+
+
+%% Include an optional title page.
+\input{title}
+
+\input{preface}
+\input{abstract}
+
+{
+    % \newgeometry{hscale=0.75,vscale=1}
+    % \fontsize{11.5}{12}\selectfont
+    \microtypesetup{protrusion=false}
+    \hypersetup{linkcolor=black}
+    \tableofcontents
+}
+
+%% Use Arabic numerals for the page numbers of the chapters.
+\mainmatter
+
+\input{introduction}
+\input{chapter-2}
+\input{chapter-3}
+\input{chapter-4}
+\input{chapter-5}
+\input{conclusion}
+% \input{todo}
+% \input{no_use}
+
+\appendix
+\input{appendix-a}
+\input{appendix-b}
+\input{appendix-c}
+\input{appendix-d}
+
+{
+    \emergencystretch=3em
+    \hypersetup{citecolor=black, urlcolor=black, linkcolor=black}
+    \printbibliography[heading=bibintoc]
+}
+
+\clearpage
+\vspace*{\fill}
+\hfill
+\begin{center}
+% \textsl{This page would be intentionally left blank if we would not wish to inform about that.}
+\textsl{This page intentionally left blank.}
+
+\vspace{2em}
+
+\footnotesize{(in order to achieve a total page count of 73; a prime number)}
+\end{center}
+\vspace{\fill}
+\thispagestyle{empty}
+\newpage
+\if@twocolumn\hbox{}\newpage\fi
+
+\end{document}

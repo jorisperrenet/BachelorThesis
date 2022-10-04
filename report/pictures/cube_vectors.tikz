@@ -1,0 +1,66 @@
+% \newcommand{\}{2}
+
+\begin{tikzpicture}[axis/.style={->,blue,thick},
+                    vector/.style={-stealth,black,ultra thick}]
+	%draw the axes
+	\draw[axis] (0,0,0) -- (1.5,0,0) node[anchor=west]{$x$};
+	\draw[axis] (0,0,0) -- (0,1.5,0) node[anchor=west]{$y$};
+	\draw[axis] (0,0,0) -- (0,0,1.5) node[anchor=west]{$z$};
+
+    \coordinate (O) at (0,0,0);
+    \coordinate (A) at (0,1,0);
+    \coordinate (B) at (0,1,1);
+    \coordinate (C) at (0,0,1);
+    \coordinate (D) at (1,0,0);
+    \coordinate (E) at (1,1,0);
+    \coordinate (F) at (1,1,1);
+    \coordinate (G) at (1,0,1);
+
+    \coordinate (M1) at (1,.5,.5);
+    \coordinate (M2) at (.5,1,.5);
+    \coordinate (M3) at (.5,.5,1);
+    \coordinate (M4) at (0,.5,.5);
+    \coordinate (M5) at (.5,0,.5);
+    \coordinate (M6) at (.5,.5,0);
+
+    \coordinate (N1) at (1.5,.5,.5);
+    \coordinate (N2) at (.5,1.45,.5);
+    \coordinate (N3) at (.5,.5,1.75);
+    \coordinate (N4) at (-.5,.5,.5);
+    \coordinate (N5) at (.5,-.45,.5);
+    \coordinate (N6) at (.5,.5,-.75);
+
+    \draw[blue,fill=gray!80,opacity=0.6] (O) -- (C) -- (G) -- (D) -- cycle;% Bottom Face
+    \draw[blue,fill=gray!80,opacity=0.6] (O) -- (A) -- (E) -- (D) -- cycle;% Back Face
+    \draw[blue,fill=gray!80,opacity=0.6] (O) -- (A) -- (B) -- (C) -- cycle;% Left Face
+
+    \node at (.5,.075,0) {$\Delta x$};
+    \node at (.1,.5,0) {$\Delta y$};
+    \foreach \xy in {M4, M5, M6}{
+        \node [white] at (\xy) {$\odot$};
+    }
+    \draw[vector] (N4) -- (M4);
+    \draw[vector] (N5) -- (M5);
+    \draw[vector] (N6) -- (M6);
+
+    \draw[blue,fill=gray!35,opacity=0.6] (D) -- (E) -- (F) -- (G) -- cycle;% Right Face
+    \draw[blue,fill=gray!30,opacity=0.6] (A) -- (B) -- (F) -- (E) -- cycle;% Top Face
+    \draw[blue,fill=gray!20,opacity=0.6] (C) -- (B) -- (F) -- (G) -- cycle;% Front Face
+
+    \node at (1.1,0,.5) {$\Delta z$};
+    \foreach \xy in {M1, M2, M3}{
+        \node [white] at (\xy) {$\odot$};
+    }
+    \draw[vector] (N1) -- (M1);
+    \draw[vector] (N2) -- (M2);
+    \draw[vector] (N3) -- (M3);
+
+    % These are N1, N2 etc
+    \node [black] at (1.6,.6,.5) {\footnotesize $-p(\mathbf r_3, t) \Delta y \Delta z$};
+    \node [black] at (.6,1.55,.5) {\footnotesize $-p(\mathbf r_1, t) \Delta x \Delta z$};
+    \node [black] at (.5,.4,1.75) {\footnotesize $-p(\mathbf r_5, t) \Delta x \Delta y$};
+    \node [black] at (-.6,.6,.5) {\footnotesize $p(\mathbf r_6, t) \Delta x \Delta z$};
+    \node [black] at (.5,-.55,.5) {\footnotesize $p(\mathbf r_4, t) \Delta x \Delta z$};
+    \node [black] at (.5,.5,-.9) {\footnotesize $p(\mathbf r_2, t) \Delta x \Delta y$};
+
+\end{tikzpicture}

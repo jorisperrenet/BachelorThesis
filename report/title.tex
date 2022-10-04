@@ -1,0 +1,80 @@
+\begin{titlepage}
+
+
+\begin{center}
+
+%% Insert the TU Delft logo at the bottom of the page.
+
+%% Print the title in cyan.
+{\makeatletter
+\fontsize{40}{40}\selectfont\@title
+%\largetitlestyle\color{tudelft-cyan}\Huge\@title
+\makeatother}
+
+%% Print the optional subtitle in black.
+{\makeatletter
+\ifx\@subtitle\undefined\else
+    \bigskip
+   {\tudsffamily\fontsize{22}{32}\selectfont\@subtitle}
+    %\titlefont\titleshape\LARGE\@subtitle
+\fi
+\makeatother}
+
+\bigskip
+\bigskip
+
+by
+
+\bigskip
+\bigskip
+
+%% Print the name of the author.
+{\makeatletter
+\fontsize{30}{30}\selectfont\@author
+\makeatother}
+
+\bigskip
+\bigskip
+
+to obtain the degree of Bachelor of Science in
+
+Applied Mathematics and Applied Physics
+
+at the Delft University of Technology,
+
+to be defended publicly on Friday, 1 July, 2022 at 14:00.
+
+\vfill
+
+\begin{tabular}{lll}
+    Student number: & 5293243 \\
+    Project duration: & \multicolumn{2}{l}{24 February 2022 -- 1 July 2022} \\
+    Thesis committee: & Prof.\ dr.\ ir.\ C.\ Vuik, & TU Delft, EWI supervisor \\
+        & Dr.\ ir.\ D.\ J.\ Verschuur, & TU Delft, TNW supervisor \\
+        & Dr.\ ir.\ Y.\ M.\ Dijkstra, & TU Delft, EWI \\
+        & Dr.\ W.\ A.\ van Dongen, & TU Delft, TNW \\
+    Additional supervision: & Ir. L.A. Hoogerbrugge, & TU Delft, TNW \\
+\end{tabular}
+%% Only include the following lines if confidentiality is applicable.
+
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+An electronic version of this thesis is available at \url{http://repository.tudelft.nl/}.
+
+% The uncompiled, \LaTeX version is available at \url{https://github.com/jorisperrenet/BachelorThesis}.
+An uncompiled, \LaTeX\ version of this thesis is available at \url{https://github.com/jorisperrenet/BachelorThesis}.
+%\\[1cm]
+
+\end{center}
+
+\begin{tikzpicture}[remember picture, overlay]
+    \node at (current page.south)[anchor=south,inner sep=0pt]{
+        % \includegraphics{cover/logo_black}
+        \includegraphics{cover/logo}
+    };
+\end{tikzpicture}
+
+\end{titlepage}
+

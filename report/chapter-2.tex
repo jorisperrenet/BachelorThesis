@@ -1,0 +1,362 @@
+\chapter{Deriving the Rayleigh integral}
+\label{chap2}
+In this chapter we derive the Rayleigh integral. Using this integral we can calculate the pressure wavefield at different depths in the subsurface, which is crucial for constructing a model of the subsurface.
+% Such a model can in turn be useful for finding structures and abnormalities in Earth's layers, mainly used for finding storage possibilities for CO$_2$ and locating oil and gas reservoirs.
+
+The derivation of the integral is rather long, however important, thus we devote this entire chapter to it.
+Further information on the derivation can be found in \citeauthor{Book_Eric} \cite[Chapter 3-4]{Book_Eric} and in \citeauthor{Kutscha} \cite[Appendix A]{Kutscha}, which provided a basis for this chapter.
+
+We start with deriving the three-dimensional acoustic wave equation, which translates to the Helmholtz equation in the frequency domain.
+The Helmholtz equation is then solved, yielding two cardinal results: the wavefield of a point-source and the wavefield of a point-sink.
+Afterwards we derive the Kirchhoff integral, which in combination with our previous results and a trick developed by Rayleigh allows us to derive the Rayleigh integral.
+
+\section{Deriving the acoustic wave equation}
+\label{sec:wave_eq}
+In this section we derive the three-dimensional acoustic wave equation, since the derivation is rather algebraic we provide a more intuitive method for deriving the one-dimensional version in Appendix \ref{appendix:wave_eq}.
+This can also be used as a verification of the algebraic approach.
+
+\begin{wrapfigure}{r}{.5\textwidth}
+    \vspace{-1.5em}
+    \centering
+    \includegraphics[width=.5\textwidth]{pictures/cube_vectors}
+    \vspace{-2em}
+    \caption{Infinitesimal volume element with dimensions $\Delta x$, $\Delta y$ and $\Delta z$, experiencing forces on its six faces due to excess pressure $p(\mathbf r, t)$.}
+    \label{fig:cube}
+    \vspace{-1em}
+\end{wrapfigure}
+
+We start off by considering an infinitesimal volume element with $\Delta V = \Delta x \Delta y \Delta z$, displayed in Figure \ref{fig:cube}, experiencing a total pressure $p_{tot}(\mathbf r, t)$ depending on position and time on each of its faces.
+
+The total pressure consists of a static part $p_0(\mathbf r)$ independent of time and a time variant excess pressure part $p(\mathbf r, t)$:
+\begin{equation}
+    p_{tot}(\mathbf r, t) = p_0(\mathbf r) + p(\mathbf r, t) \,.\nonumber
+\end{equation}
+From now we only concern ourselves with the excess pressure field.
+
+If there is such an excess pressure the volume element $\Delta V$ experiences displacement and deformation.
+If the pressure on all six faces does not balance, the volume will experience a net force, causing it to accelerate.
+We describe this by using Newton's (second) law.
+
+However, we first look at the situation where the excess pressure does balance, this causes the volume element $\Delta V$ to undergo a change in volume due to confining pressure.
+This change can be described by using Hooke's law.
+
+After deriving relations describing the volume element by using Hooke's law and Newton's law we can combine the relations into the three-dimensional acoustic wave equation.
+After solving the equation in the frequency domain we obtain the wavefield of a point-source and the wavefield of a point-sink.
+These two equations lay the groundwork for the derivation of the Rayleigh integral.
+
+\subsection{Hooke's law}
+We start by writing out Hooke's law, which states that (relative) changes in the volume of a volume element due to confining pressure are proportional to that pressure (with a proportionality constant that can be space variant):
+\begin{equation}
+    p(\mathbf r, t) = -K(\mathbf r) \frac{\delta \Delta V}{\Delta V} \,, \label{eq:hook}
+\end{equation}
+where $\delta$ indicates a variation with time.
+To get rid of the factor $\delta \Delta V / \Delta V$ we define the displacement vector field of the mass particles in the medium to be
+\begin{equation}
+    \mathbf u (\mathbf r, t) = \zeta(\mathbf r, t) \mathbf{\hat x} + \eta(\mathbf r, t) \mathbf{\hat y} + \xi(\mathbf r, t) \mathbf{\hat z} \,,\nonumber
+\end{equation}
+remembering that $\mathbf{\hat x}$, $\mathbf{\hat y}$, and $\mathbf{\hat z}$ denote the unit vectors in the $x$, $y$, and $z$-directions, respectively.
+After writing $\Delta \zeta = \zeta(x+\Delta x) - \zeta(x)$ and defining $\Delta \eta$ and $\Delta \xi$ similarly, the increase in volume can now be written as
+\begin{equation}
+    \Delta V + \delta \Delta V = (\Delta x + \Delta \zeta) (\Delta y + \Delta \eta) (\Delta z + \Delta \xi) \,.\nonumber
+\end{equation}
+Bringing $\Delta V$ to the other side and writing out the right-hand side whilst omitting negligible factors (since $\Delta \zeta << \Delta x$, $\Delta \eta << \Delta y$, and $\Delta \xi << \Delta z$ for small variations in time we can neglect factors depending on products of these differences) gives us
+\begin{equation}
+    \delta \Delta V = (\Delta x \Delta y \Delta z - \Delta V) + \Delta x \Delta y \Delta \xi + \Delta x \Delta z \Delta \eta + \Delta y \Delta z \Delta \zeta \,.\nonumber
+\end{equation}
+Dividing by $\Delta V$ and taking the limit for small volume elements $\Delta V$ results in
+\begin{equation}
+    \lim_{\Delta V \to 0} \frac{\delta \Delta V}{\Delta V} = \frac{\partial \zeta (\mathbf r, t)}{\partial x} + \frac{\partial \eta (\mathbf r, t)}{\partial y} + \frac{\partial \xi (\mathbf r, t)}{\partial z} = \nabla \cdot \mathbf u (\mathbf r, t) \,.\nonumber
+\end{equation}
+This allows us to replace the factor $\delta \Delta V / \Delta V$ in Hooke's law (equation \ref{eq:hook}) by a component relating fields. This gives the equation
+\begin{equation}
+    p(\mathbf r, t) = -K(\mathbf r) \nabla \cdot \mathbf u(\mathbf r, t) \,.\nonumber
+\end{equation}
+
+Now, if we have a function $q(\mathbf r, t)$ describing the ``injected'' volume into the volume element (we previously did not take this into account) we can rewrite our previous equation into
+\begin{equation}
+    \nabla \cdot \mathbf u(\mathbf r, t) = -\frac{p(\mathbf r, t)}{K(\mathbf r)} + q(\mathbf r, t) \,. \label{eq:part1}
+\end{equation}
+
+\subsection{Newton's law}
+Before deriving the three-dimensional acoustic wave equation we must acquire another relation using the displacement vector.
+To do this, we use Newton's second law, it states that ``the change of motion of an object is proportional to the force impressed'' \cites[Section 6.2]{Book_Newton}[Section 1.1]{Book_Newton_2}.
+Thus, if the forces on the volume element $\Delta V$ do not balance the volume element will experience acceleration, due to the element having mass and therefore inertia.
+To put this into formulas, we work out the net force acting on the volume element in Figure \ref{fig:cube}:
+\begin{align}
+    \Delta F_x &= \Delta y \Delta z (p(x, y, z, t) - p(x+\Delta x, y, z, t)) \approx - \Delta x \Delta y \Delta z \frac{\partial p}{\partial x} \,,\nonumber \\
+    \Delta F_y &= \Delta x \Delta z (p(x, y, z, t) - p(x, y+\Delta y, z, t)) \approx - \Delta x \Delta y \Delta z \frac{\partial p}{\partial y} \,,\nonumber \\
+    \Delta F_z &= \Delta x \Delta y (p(x, y, z, t) - p(x, y, z+\Delta z, t)) \approx - \Delta x \Delta y \Delta z \frac{\partial p}{\partial z} \,.\nonumber
+\end{align}
+This can be rewritten as
+\begin{equation}
+    \Delta \mathbf F = - \Delta V \nabla p(\mathbf r, t) = \Delta m \mathbf a \,, \nonumber
+\end{equation}
+where it can be noted that the last equality follows from Newton's second law and that $\Delta m$ denotes the mass of the volume element (which can be written as $\rho \Delta V$, where $\rho$ denotes the space variant mass density).
+After dividing by $\Delta V$, this yields
+\begin{equation}
+    - \nabla p (\mathbf r, t) = \rho(\mathbf r) \frac{\partial^2 \mathbf u(\mathbf r, t)}{\partial t^2} \,.\nonumber
+\end{equation}
+
+If we now add an external source $\mathbf f(\mathbf r, t)$ we get extra forces on the volume element, which results in a change of the previous formula, we obtain
+\begin{equation}
+    \mathbf f(\mathbf r, t)- \nabla p (\mathbf r, t) = \rho(\mathbf r) \frac{\partial^2 \mathbf u(\mathbf r, t)}{\partial t^2} \,. \label{eq:newton}
+\end{equation}
+
+\subsection{Combining the two results}
+In this subsection we combine our results from Hooke's law and Newton's law into the three-dimensional acoustic wave equation.
+
+To bring this about, we continue with equation \ref{eq:newton}, take the divergence and divide by the mass density:
+\begin{equation}
+    \nabla \cdot \frac{\mathbf f(\mathbf r, t)}{\rho(\mathbf r)} - \nabla \cdot \left[ \frac{\nabla p (\mathbf r, t)}{\rho(\mathbf r)} \right] = \nabla \cdot \frac{\partial^2 \mathbf u(\mathbf r, t)}{\partial t^2} \,. \nonumber
+\end{equation}
+Taking the second time derivative of equation \ref{eq:part1} results in
+\begin{equation}
+    \nabla \cdot \frac{\partial^2 \mathbf u(\mathbf r, t)}{\partial t^2} = -\frac{1}{K(\mathbf r)}\frac{\partial^2 p(\mathbf r, t)}{\partial t^2} + \frac{\partial^2 q(\mathbf r, t)}{\partial t^2} \,. \nonumber
+\end{equation}
+If we now equate the previous two equations we obtain
+\begin{equation}
+    \nabla \cdot \frac{\mathbf f(\mathbf r, t)}{\rho(\mathbf r)} - \nabla \cdot \left[ \frac{\nabla p (\mathbf r, t)}{\rho(\mathbf r)} \right] =  -\frac{1}{K(\mathbf r)}\frac{\partial^2 p(\mathbf r, t)}{\partial t^2} + \frac{\partial^2 q(\mathbf r, t)}{\partial t^2} \,. \label{eq:equated}
+\end{equation}
+In order to rewrite this equation we define
+\begin{equation}
+    s(\mathbf r, t) \coloneq \frac{\partial^2 q(\mathbf r, t)}{\partial t^2} - \nabla \cdot \frac{\mathbf f(\mathbf r, t)}{\rho(\mathbf r)}\,. \nonumber
+\end{equation}
+After substituting the new definition into equation \ref{eq:equated} and reorganizing we get
+\begin{equation}
+    \nabla \cdot \left[ \frac{\nabla p (\mathbf r, t)}{\rho(\mathbf r)} \right] - \frac{1}{K(\mathbf r)}\frac{\partial^2 p(\mathbf r, t)}{\partial t^2} = - s(\mathbf r, t) \,.\nonumber
+\end{equation}
+
+If we consider a homogeneous medium, $\rho$ and $K$ will no longer be space variant, yielding the relation
+\begin{equation}
+    \nabla^2 p (\mathbf r, t) - \frac{1}{c^2} \frac{\partial^2 p (\mathbf r, t)}{\partial t^2} = -s(\mathbf r, t) \,,\label{eq:helmholtz}
+\end{equation}
+with $c = \sqrt{K/\rho}$.
+This is the three-dimensional acoustic wave equation (for homogeneous media), an important result as we will solve this equation in the frequency domain in the next section. Afterwards, we use the solutions to specify a known part of the Rayleigh integral.
+
+\section{Wavefield of a single point-source}
+In this section we continue with the acoustic wave equation derived in the previous section (Section \ref{sec:wave_eq}).
+First, we transfer it to the frequency domain giving the Helmholtz equation, which we solve by deriving its Green's functions in the coming subsection (Subsection \ref{solving_helmholtz}).
+The result corresponds to a known part of the Rayleigh integral, this part is crucial to derive as some developed integration methods make use of this.
+
+Taking the three-dimensional acoustic wave equation (equation \ref{eq:helmholtz}) and substituting $-s(\mathbf r, t)$ with a single point-source at $\mathbf r_s$, whilst assuming that the point-source sends out one delta pulse, gives
+\begin{equation}
+    \nabla^2 p (\mathbf r, t) - \frac{1}{c^2} \frac{\partial^2 p (\mathbf r, t)}{\partial t^2} = \delta(t) \delta(\mathbf r-\mathbf r_s) \,.\label{eq:time_domain_wave_eq}
+\end{equation}
+In order to rewrite this equation, we first note that taking the time derivative on both sides of the inverse Fourier transformation in equation \ref{eq:reverse_time_fourier} results in
+\begin{equation}
+    \frac{\partial x(t)}{\partial t} \stackrel{\mathcal F}{\longleftrightarrow} i \omega X(\omega) \,. \nonumber
+\end{equation}
+That is, temporal differentiation in the time domain results in multiplication with $i\omega$ in the frequency domain.
+Also, the Fourier transform of a delta function can be derived from equation \ref{eq:temporal_fourier_transform}:
+\begin{equation}
+    \delta(t) \stackrel{\mathcal F}{\longleftrightarrow} \int_{-\infty}^{\infty} \delta(t) e^{-i\omega t} \mathrm d t = 1 \,. \nonumber
+\end{equation}
+Using these relations, the Fourier transform of equation \ref{eq:time_domain_wave_eq} can be evaluated in order to obtain the Helmholtz equation:
+\begin{equation}
+    \nabla^2 P (\mathbf r, \omega) + \frac{\omega^2}{c^2} P (\mathbf r, \omega) = \delta(\mathbf r - \mathbf r_s) \,.\label{eq:PDE_fourier}
+\end{equation}
+In the next subsection (Subsection \ref{solving_helmholtz}) we solve the above equation, however, to set an objective, we first give the wavefield of a point-source and the wavefield of a point-sink (both solutions to the equation):
+\begin{equation}
+    P_{src} (\mathbf r, \omega) = \frac{e^{-i \omega |\mathbf r - \mathbf r_s| / c}}{4 \pi |\mathbf r-\mathbf r_s|} \quad \textrm{and} \quad
+    P_{snk} (\mathbf r, \omega) = \frac{e^{i \omega |\mathbf r - \mathbf r_s| / c}}{4 \pi |\mathbf r-\mathbf r_s|} \,. \label{eq:greens_function}
+\end{equation}
+
+\subsection{Solving the Helmholtz equation}
+\label{solving_helmholtz}
+In this subsection we prove the validity of equation \ref{eq:greens_function} (the equation for the wavefield of a point-source and a point-sink) by solving the Helmholtz equation (equation \ref{eq:PDE_fourier}).
+The seeming paradox that both equations are solutions to the same equation is also resolved in this subsection.
+The solutions to the equations are used again in Section \ref{sec:rayleigh} where we derive the Rayleigh integral.
+
+We solve equation \ref{eq:PDE_fourier} by deriving its Green's functions.
+Due to symmetry we know that any Green's function will only depend on its magnitude of the distance between $\mathbf r$ and $\mathbf r_s$.
+Thus after denoting $\mathbf r - \mathbf r_s$ by $\mathbf d$, any Green's function will eventually only depend on $|\mathbf d|$.
+For now, we define $k = \omega/c$ and after noting that we assume $k$ to be constant we rewrite the Helmholtz equation (equation \ref{eq:PDE_fourier}) as (we omit the dependency on $\omega$ to avoid confusion)
+\begin{equation}
+    (\nabla^2 + k^2) G(\mathbf d) = \delta(\mathbf d)\,.\nonumber
+\end{equation}
+% In the remainder of this block $\mathbf q$ (and the later introduced $q$) will solely be used to denote the spatial frequency when using a Fourier transform.
+If we apply the spatial Fourier transform in equation \ref{eq:fourier_trans} to the newly rewritten Helmholtz equation and define $|\mathbf q|^2 = q_x^2 + q_y^2 + q_z^2$ (remember that the Fourier transform of a delta function is given by equation \ref{eq:fourier_delta}, the differentiation property is given by \citeauthor{Fourier_transform} \cite[Section 3.4.3]{Fourier_transform} and can be easily verified by taking the derivative of equation \ref{eq:fourier_trans}), we get
+\begin{equation}
+    (k^2 - |\mathbf q|^2) \mathcal F\{ G\} (\mathbf q) = \frac{1}{(2\pi)^3} \,. \nonumber
+\end{equation}
+Rewriting this equation and taking the inverse spatial Fourier transform from equation \ref{eq:inv_fourier} we obtain
+\begin{equation}
+    G(\mathbf d) = -\frac{1}{(2\pi)^3} \int_{-\infty}^\infty \frac{e^{i \mathbf q \cdot \mathbf d}}{|\mathbf q|^2-k^2} \mathrm d^3 \mathbf q \,,\label{eq:greens_on_d}
+\end{equation}
+which is of the form
+\begin{equation}
+    \int_{-\infty}^\infty f(q) e^{i \mathbf q \cdot \mathbf d} \mathrm d^3 \mathbf q \,, \nonumber
+\end{equation}
+where $q$ is used to denote the magnitude of $\mathbf q$, i.e. $|\mathbf q|$. Since $f(q)$ does not depend on the direction of $\mathbf q$, this is equivalent to
+\begin{equation}
+    \frac{4\pi}{R} \int_0^\infty q f(q) \sin(q R) \mathrm d q \,,\nonumber
+\end{equation}
+with $R = |\mathbf d| = |\mathbf r - \mathbf r_s|$. For the proof of this statement the reader is referred to \citeauthor{Barton} \cite[Appendix F]{Barton}.
+Rewriting equation \ref{eq:greens_on_d} by using the equivalence from above gives us
+\begin{equation}
+    G(R) = -\frac{4 \pi}{(2\pi)^3 R} \int_0^\infty \frac{q}{q^2-k^2} \sin(q R) \mathrm d q \,.\nonumber
+\end{equation}
+Note that we expected that any Green's function would only depend on the magnitude of $\mathbf r - \mathbf r_s$ (i.e. the newly defined $R$), which is indeed the case.
+Since the integrand is even, we write:
+\begin{equation}
+    G(R) = -\frac{4 \pi}{(2\pi)^3 2R} \int_{-\infty}^\infty \frac{q}{q^2-k^2} \sin(q R) \mathrm d q\,. \nonumber
+\end{equation}
+The sine function can be expressed as a linear combination of exponentials:
+\begin{equation}
+    \sin(q R) = \frac{e^{iq R} - e^{-iq R}}{2i} \,, \nonumber
+\end{equation}
+which after substitution results in the following relation for $G(R)$:
+\begin{equation}
+    G(R) = -\frac{4 \pi}{(2\pi)^3 4iR} \bigg[ \underbrace{\int_{-\infty}^\infty \frac{q e^{i q R}}{(q-k)(q+k)} \mathrm d q}_{I_1} - \underbrace{\int_{-\infty}^\infty \frac{q e^{-i q R}}{(q-k)(q+k)} \mathrm d q}_{I_2} \bigg] \,.\label{eq:greens_2}
+\end{equation}
+We wish to find the integrals $I_1$ and $I_2$.
+First we note that after a substitution of $q' = -q$ in $I_2$ we get $-I_1$ (the intervals also change due to this substitution resulting in the final minus sign).
+Thus, all Green's function satisfy
+\begin{equation}
+    G(R) = -\frac{4 \pi}{(2\pi)^3 2iR} I_1 = -\frac{1}{4\pi^2 i R} I_1  \,.\nonumber
+\end{equation}
+We note that different Green's functions originate from different values of $I_1$.
+Its value is evaluated further by means of contour integration.
+
+We use a contour in the complex $q$ plane. However, due to poles on the real $q$-axis we first add the term $+i\epsilon$ to $k$ and take the limit $\epsilon \to 0$:
+\begin{equation}
+    I_1 = \lim_{\epsilon \to 0} \int_{-\infty}^\infty \underbrace{\frac{z e^{i zR}}{(z-(k+i\epsilon))(z+(k+i\epsilon))}}_{f(z)} \mathrm d z \,. \label{eq:contour_I_1}
+\end{equation}
+We can now see that $f(z)$ has poles at $z=k+i\epsilon$ and $z=-k-i\epsilon$, therefore, we take a contour in the upper half-plane, denoted by $\mathcal C$.
+To clarify; the contour consists of the interval $[-A,A]$ and the semicircle $C_A = \{ Ae^{i\theta} | \theta \in [0, \pi] \}$.
+From the residue theorem we get
+\begin{align}
+    \int_{\mathcal C} f(z) \mathrm d z &= 2 \pi i \lim_{\epsilon \to 0} \left( \textrm{Res}_{z=k+i\epsilon} [f(z)]\right) \nonumber \\
+                                       &= 2 \pi i \lim_{\epsilon \to 0} \frac{(k+i\epsilon)e^{i(k+i\epsilon)R}}{2(k+i\epsilon)} \nonumber \\
+                                       &= \pi i e^{ikR} \,, \nonumber
+\end{align}
+yielding the relation
+\begin{equation}
+    I_1 + \int_{C_A} f(z) = \pi i e^{ikR} \,. \nonumber
+\end{equation}
+We now show that $\int_{C_A} f(z) \to 0$ as $A \to \infty$.
+From Jordan's lemma \cite[Section 74]{complex_jordan} with $f(z) = e^{izR}g(z)$ where $z \in C_A$ and $R$ is strictly positive, we get
+\begin{align}
+    \left| \int_{C_A} f(z) \mathrm d z \right| &\leq \frac{\pi}{R} \max_{\theta \in [0, \pi]} |g(Ae^{i\theta})| \nonumber \\
+                                               &= \frac{\pi}{R} \max_{\theta \in [0, \pi]} \left\lvert \frac{Ae^{i\theta}}{(Ae^{i\theta}-k)(Ae^{i\theta}+k)} \right\rvert \nonumber \\
+                                               &= \frac{\pi}{R} \max_{\theta \in [0, \pi]}  \frac{A}{\left\lvert A^2e^{2i\theta}-k^2\right\rvert}  \nonumber \\
+                                               &= \frac{\pi}{R} \frac{A}{A^2-k^2} \,. \nonumber
+\end{align}
+We can thus see that $\int_{C_A} f(z) \to 0$ as $A \to \infty$.
+Hence we have $I_1 = \pi i e^{i k R}$.
+Note that if $R=0$ we get $I_1=I_2$ in equation \ref{eq:greens_2} and due to $R$ being in the denominator we get $G(0) = \delta(0)$, in this case, we did not have to use contour integration.
+
+In addition, the option to add $-i\epsilon$ instead of $+i\epsilon$ to $k$ in equation \ref{eq:contour_I_1} is also possible, for that matter, we could even choose to add $-i\epsilon$ to the first occurrence of $k$ and $+i\epsilon$ to the second or vice versa\footnote{We also could have chosen to evaluate $I_2$. To achieve this, one can take a contour in the lower half plane and apply an equivalent form of Jordan's lemma. This removes the minus sign in front of $G(R)$.}.
+All these options correspond to a different propagator, yielding a different result to the integral \cite[Section 3.6]{griffel}.
+If we add $-i\epsilon$ instead of $+i\epsilon$ we get a pole in $\mathcal C$ at $z=-k+i\epsilon$, after following the same steps as above we get the result $I_1 = \pi i e^{-ikR}$.
+Since this results comes from the pole at $-k$ we denote it as $I_1^{-} = \pi i e^{-ikR}$ and the result from above as $I_1^{+} = \pi i e^{ikR}$.
+The other two results (from adding $-i\epsilon$ and $+i\epsilon$ or $+i\epsilon$ and $-i\epsilon$) are $0$ and $2 \pi i \cos(kR)$, respectively (note that $0$ is a correct solution for $I_1$ since we divide by $R$, which gives $G(R)=\delta(R)$, a solution to equation \ref{eq:PDE_fourier}).
+The selected option of adding $\pm i \epsilon$'s determines the corresponding physical interpretation \cite[Section 11.2.2]{zettili}.
+For example, $I_1^{-}$ represents \textit{outgoing} spherical waves from $\mathbf r_s$ (causal), whereas $I_1^{+}$ represents \textit{incoming} spherical waves (anticausal).
+Note that this is not the other way around because we are in the (temporal) frequency domain and an exponential in the frequency domain leads to a time shift in the time domain (equation \ref{eq:time_shift}, noting that $k=\omega/c$) \cite[Section 4.3]{Book_Eric}.
+The other two results (or any different linear combination of $I_1^+$ and $I_1^-$) are hereafter not used, they do not have an important physical meaning for our purposes.
+% For more information on this subject the reader is referred to \cites[Section 3.6]{griffel}[Section 11.2]{zettili}[Section 4.3]{Book_Eric}{Greens1, Greens0, Greens2, Greens3, Greens4, greens_function, Greens5}.
+For more information on this subject the reader is referred to \cites[Section 3.6]{griffel}[Section 11.2]{zettili}[Section 4.3]{Book_Eric}{Greens1, Greens0, Greens2, Greens3, Greens4, Greens5}.
+
+From combining these results we obtain the Green's functions (note that if $R=0$ we still have $G(0)=\delta(0)$, the same expression as we derived without contour integration)
+\begin{align}
+    G^\pm(R) &= -\frac{1}{4\pi^2 iR} (\pi i e^{\pm ikR}) \nonumber \\
+             &= -\frac{e^{\pm ikR}}{4\pi R} \,. \nonumber
+\end{align}
+We have thus shown that
+\begin{align}
+    G^\pm(\mathbf r, \omega) = -\frac{e^{\pm i\omega |\mathbf r - \mathbf r_s|/c}}{4\pi |\mathbf r-\mathbf r_s|}
+\end{align}
+are Green's functions of the Helmholtz equation (equation \ref{eq:PDE_fourier}).
+From this we define $P_{src} (\mathbf r, \omega) = -G^- (\mathbf r, \omega)$ because it represents outgoing spherical waves and
+$P_{snk} (\mathbf r, \omega) = -G^+ (\mathbf r, \omega)$ because it represents incoming spherical waves (note that the minus sign in front of these definitions is chosen because of $-s(\mathbf r, t)$ in equation \ref{eq:helmholtz}).
+
+\section{Deriving the Kirchhoff integral}
+\begin{wrapfigure}{r}{0.3\textwidth}
+    \centering
+    \includegraphics[width=0.3\textwidth]{pictures/kirchhoff_surface}
+    \caption{Surface $S$ enclosing a volume $V$ with normal vector $\protect\overrightarrow{\mathbf n}$ pointed outward (enclosing a source placed at $\mathbf r_s$).}
+    \vspace{-1em}
+    \label{fig:volume}
+\end{wrapfigure}
+After solving the Helmholtz equation we can derive an independent result; the Kirchhoff integral.
+This is the last step before deriving the Rayleigh integral in Section \ref{sec:rayleigh}.
+
+If we take the Fourier transform of the three-dimensional acoustic wave equation in the absence of sources, i.e. equation \ref{eq:helmholtz} with $s(\mathbf r, t)=0$, we get
+\begin{equation}
+    \nabla^2 P(\mathbf r, \omega) + \frac{\omega^2}{c^2} P(\mathbf r, \omega) = 0 \,. \label{eq:1}
+\end{equation}
+Writing down the same equation for a point-source at $\mathbf r_s$ located inside the volume $V$ displayed in Figure \ref{fig:volume} (which gives $-s(\mathbf r, t) = -\delta(t)\delta(\mathbf r - \mathbf r_s)$) while using $G$ to denote the causal Green's function from equation \ref{eq:greens_function} (i.e. $P_{src}$), we get
+\begin{equation}
+    \nabla^2 G(\mathbf r, \omega) + \frac{\omega^2}{c^2} G(\mathbf r, \omega) = -\delta(\mathbf r - \mathbf r_s) \,.\label{eq:2}
+\end{equation}
+Now, multiplying equation \ref{eq:1} with $-G(\mathbf r, \omega)$ and adding it to equation \ref{eq:2} multiplied by $P(\mathbf r, \omega)$ and afterwards integrating over the volume $V$, leads to
+\begin{equation}
+    \int_V P(\mathbf r, \omega) \nabla^2 G(\mathbf r, \omega) - G(\mathbf r, \omega) \nabla^2 P(\mathbf r, \omega) \mathrm dV = \int_V -P(\mathbf r, \omega) \delta(\mathbf r - \mathbf r_s) \mathrm d V = -P(\mathbf r_s, \omega) \,.\nonumber
+\end{equation}
+Now Green's theorem \cite[Section 1.3.4]{electrodynamics} gives the Kirchhoff integral
+\begin{equation}
+    P(\mathbf r_s, \omega) = - \oint_S [P(\mathbf r, \omega) \nabla G(\mathbf r, \omega) - G(\mathbf r, \omega) \nabla P(\mathbf r, \omega)] \cdot \overrightarrow{\mathbf n} \mathrm dS\,. \label{eq:kirchhoff}
+\end{equation}
+
+\section{Deriving the Rayleigh integral}
+\label{sec:rayleigh}
+\begin{wrapfigure}{r}{.4\textwidth}
+    \vspace{-1.2em}
+    \includegraphics[width=.4\textwidth]{pictures/rayleigh_surface}
+    \vspace{-2em}
+    \caption{All sources generating the wavefield $P$ are below the flat plane $S_0$ with radius $R$. The semisphere $S_1$ also has radius $R$ and we consider the case where $R \to \infty$. The normal vector of $S_0$, i.e. $\protect\overrightarrow{\mathbf{n}}$, is defined outward. The prediction point is denoted by $A$, which lies inside the volume $V$. The source point generated by $\Gamma$ is in $A'$, which is the mirror position of $A$ with respect to the plane $S_0$.}
+    \label{fig:semisphere}
+    \vspace{-1em}
+\end{wrapfigure}
+In this section we finally derive the Rayleigh integral, this is done by using a mathematical trick due to Rayleigh.
+The integral describes the propagation from one layer of the subsurface to the next assuming that the layers extend horizontally, an important result for (marine) seismic imaging.
+
+Rayleigh's main idea was that we can add a homogeneous solution $\Gamma(\mathbf r, \omega)$ of the partial differential equation \ref{eq:PDE_fourier} to the Green's function (an inhomogeneous solution) to obtain another solution of the differential equation. For the remainder of this section we denote $P$, $G$ and $\Gamma$ instead of $P(\mathbf r, \omega)$, $G(\mathbf r, \omega)$ and $\Gamma(\mathbf r, \omega)$, respectively, whenever the chance of confusion is low.
+
+Causality of the Kirchhoff integral in equation \ref{eq:kirchhoff} tells us that the same integral holds if we go from a source point $\mathbf r_s$ to a prediction point $\mathbf r_A$ \cite[Section 4.3]{Book_Eric} (that is, instead of transmitting a wavefield in $\mathbf r_s$ we can also predict the wavefield in the same point, denoted by the prediction point $\mathbf r_A$). Combining the homogeneous solution $\Gamma$ with the abbreviated notation allows us to rewrite equation \ref{eq:kirchhoff} into
+\begin{equation}
+    P(\mathbf r_A, \omega) = - \oint_S [P \nabla (G + \Gamma) - (G + \Gamma) \nabla P] \cdot \overrightarrow{\mathbf n} \mathrm dS \,. \nonumber
+\end{equation}
+If we apply this integral to the situation displayed in Figure \ref{fig:semisphere}, we can replace $S$ by $S_0$ in the above integral.
+This can be justified since as $R\to \infty$ the wavefield $P$ generated below $S_0$ can only propagate outward with respect to the surface $S_1$ and thus can not (causally) contribute to any knowledge of the wavefield in $A$.
+
+The trick was to let the field $\Gamma$ be generated in $A'$.
+If we let $G(\mathbf r_A, \mathbf r_{S_0}) = - \Gamma (\mathbf r_{A'}, \mathbf r_{S_0})$ everywhere on $S_0$ then $G$ and $\Gamma$ cancel each other on $S_0$ (if we assume that $S_0$ is indeed a flat plane).
+This can be done by making $\Gamma$ a point sink whenever $G$ is a point-source.
+Because the wavefields cancel each other, continuity gives that the normal components of their gradients must be equal on $S_0$, i.e. $\nabla G(\mathbf r_{S_0}) = \nabla \Gamma (\mathbf r_{S_0})$, which is perfect, as the integral can now be rewritten into:
+\begin{equation}
+    P(\mathbf r_A, \omega) = - 2\oint_{S_0} [P \nabla G] \cdot \overrightarrow{\mathbf n} \mathrm dS_0 \,.\nonumber
+\end{equation}
+If the surface $S_0$ is assumed to be in the $x$,$y$-plane we get $\nabla G \cdot \mathbf n = -\partial G / \partial z$ due to an outward pointing normal vector.
+Hence, the integral becomes:
+\begin{equation}
+    P(\mathbf r_A, \omega) = 2\oint_{S_0} P \frac{\partial G}{\partial z} \mathrm dS_0 \,.\label{eq:pre_rayleigh}
+\end{equation}
+Remember that the (causal) Green's function is given by equation \ref{eq:greens_function}:
+\begin{equation}
+    G(\mathbf r_A, \mathbf r; \omega) = \frac{e^{-i\omega |\mathbf r-\mathbf r_A|/c}}{4 \pi |\mathbf r- \mathbf r_A|} \,. \nonumber
+\end{equation}
+After defining $\Delta r = |\mathbf r-\mathbf r_A|_{z=0} = \sqrt{(x-x_A)^2 + (y-y_A)^2 + z_A^2}$, we note that
+\begin{equation}
+    \frac{\partial}{\partial z} (|\mathbf r-\mathbf r_A|)_{z=0} = \left[ \frac{(z-z_A)}{\sqrt{(x-x_A)^2 + (y-y_A)^2 + (z-z_A)^2}} \right]_{z=0} = \frac{-z_A}{\Delta r} \,, \nonumber
+\end{equation}
+giving us the ability to compute the derivative with respect to $z$ in the $x$,$y$-plane of the (causal) Green's function:
+\begin{align}
+    \left( \frac{\partial G}{\partial z} \right)_{z=0} &= \left[ \frac{4\pi |\mathbf r - \mathbf r_A| \frac{\partial}{\partial z} (e^{-i\omega |\mathbf r-\mathbf r_A|/c}) - e^{-i\omega |\mathbf r-\mathbf r_A|/c} \frac{\partial}{\partial z} (4\pi|\mathbf r-\mathbf r_A|) }{(4 \pi |\mathbf r-\mathbf r_A|)^2} \right]_{z=0} \nonumber \\
+                                                       &= \frac{\Delta r \frac{\partial}{\partial z}(-i\omega|\mathbf r-\mathbf r_A|/c)_{z=0} \ e^{-i\omega \Delta r/c} + e^{-i\omega \Delta r/c} \frac{z_A}{\Delta r} }{4 \pi \Delta r^2} \nonumber \\
+                                                       &= \frac{\Delta r i\omega \frac{z_A}{\Delta r}/c + \frac{z_A}{\Delta r} }{4 \pi \Delta r^2} e^{-i\omega \Delta r/c} \nonumber \\
+                                                       &= \frac{z_A(1+i\omega \Delta r/c)}{4 \pi \Delta r^3} e^{-i\omega \Delta r/c} \,.\nonumber
+\end{align}
+Plugging this in the integral from equation \ref{eq:pre_rayleigh} gives us the long-sought Rayleigh integral:
+\begin{equation}
+    P(\mathbf r_A, \omega) = \frac{z_A}{2\pi} \int_{-\infty}^\infty \int_{-\infty}^\infty P(x, y, 0; \omega) \left( 1+i\omega \frac{\Delta r}{c} \right)\frac{e^{-i\omega \Delta r/c}}{\Delta r^3} \mathrm dx \mathrm d y \,.\label{eq:rayleigh}
+\end{equation}
+
+Often, however, the far-field approximation is used (a valid approximation if the prediction point is numerous wavelengths away from the source), which is the result of dropping the $1+$ term in the above equation:
+\begin{equation}
+    P(\mathbf r_A, \omega) = \frac{i \omega z_A}{2\pi c} \int_{-\infty}^\infty \int_{-\infty}^\infty P(x, y, 0; \omega) \frac{e^{-i\omega \Delta r/c}}{\Delta r^2}  \mathrm dx \mathrm d y \,.\nonumber
+\end{equation}
+
+% \subsection{Verifying the Rayleigh integral}
+% \textcolor{tudelft-fuchsia}{We can add something here, see Eric's commentaar.}

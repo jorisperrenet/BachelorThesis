@@ -1,0 +1,59 @@
+\chapter{Conclusion and outlook}
+\label{conclusion}
+\section{Conclusion}
+% In this thesis we derived the Rayleigh integral and subsequently we used polynomial interpolation for numerical integration.
+% Followed by modifying the integration methods to better fit the Rayleigh integral.
+% The different methods used are
+In this thesis we started with deriving the Rayleigh integral and subsequently developed polynomial interpolation methods for numerical integration in order to determine whether modifying the integration methods would reduce the error in approximations of the Rayleigh integral.
+The presented methods are:
+% in this these we started with deriving the ray integral and subsequently used poly interpolation for numerical integration in order to determine whether modyfing the integration methods would improve the fitting of the rayleigh integral.
+% In this thesis we started with deriving the Rayleigh integral.
+% Subsequently, we took a glance at using polynomial interpolation for numerical integration.
+% Afterwards, we devoted a chapter to modifying the integration methods to better fit the Rayleigh integral, here we gave a quick overview of the presented methods:
+\vspace{-.5em}
+\begin{itemize}
+    \itemsep0em
+    \item The basic method; this is the one that is currently used for approximating the Rayleigh integral.
+    \item An adaptation of the basic method; the basic method for a rectilinear grid.
+    \item The combined interpolation method; Simpson's rule in our case.
+    \item The modified combined interpolation method; an adaptation for a semi-equidistant grid.
+    \item The separate interpolation method; this method separately interpolates the unknown part of the integrand (to a low degree) and the known part of the integrand (to a higher degree) and combines the results.
+    \item The altered separate interpolation method; this is an adaptation of the separate interpolation method to non-equidistant grids.
+\end{itemize}
+\vspace{-.5em}
+These different integration methods were then used to approximate a synthetic Rayleigh integral with varying amounts of noise in the sample points.
+% In the final chapter we present the results of the different integration methods, that is, we approximate a synthetic Rayleigh integral (with varying amounts of noise in the sample points) using the different methods.
+
+The best performing method is the altered version of the separate interpolation method. It outperforms all other methods in accuracy and is on average, in comparison with the currently used method, at least 15 times better in the moderate to well sampled range\footnote{This is the achieved with more than 12 sample points per wavelength in the $x$-direction and more than 8 sample points per wavelength in the $y$-direction.}.
+
+Our adjustment to the basic method only performed marginally better and the cost of more operations is not beneficial.
+
+The combined interpolation approach performed well with relatively small noise (up to about 1\% of the distance between gridpoints) and more than 10 sample points per wavelength (in both directions). However, the improvement on the approximation fluctuates too much to be relied upon if the conditions are not met. An advantage of this method is that it is relatively easy to implement.
+
+The modified version of the method also has a lot of fluctuations, giving inconsistent results that are on average only marginally better than the original version. Therefore, we do not think that the extra computation time is worth it in comparison to the combined method.
+
+The separate interpolation method scores only slightly better than the combined method, it had peak-performance with almost no noise and numerous sample points per wavelength. However, this method is more difficult to implement and will likely take longer to evaluate than the combined method, hence, this method is not recommended.
+
+
+
+\section{Future Research}
+\label{discussion}
+In future research we recommend to look at making an ``accuracy vs speed'' analysis.
+In seismic imaging it is crucial that the first propagations of the wavefield are accurate, if the error in these propagations are too large one has no hope to arrive at a decent answer after propagating it hundreds of times more.
+Since we presented methods to increase accuracy a researcher could look at using different methods for different propagations, to get a better result in the first few propagations and to limit the error in the end result.
+Our presented methods likely take more time to evaluate, therefore, an optimum can be found if we compare accuracy to speed and use various methods.
+
+Placing the sensors is important, the methods presented could yield better results if the grid is not placed approximately equidistant, i.e. some the methods could perform better on a different grid. An example of this could be a triangular grid, which could also result in time advantages using the modified separate interpolation method as this relies on triangulating the input data. In addition, one could look at systematic errors in gridpoints and the impact of those on the accuracy of the different methods.
+
+Also, an implementation of some algorithms would be needed to perform a speed analysis of the methods.
+Even though the time complexity of the algorithms is the same, it depends on the computer used and the implementation of the method.
+
+Another combined interpolation method of using higher-order polynomials was discussed shortly in this thesis.
+The methods were not developed further because of great deflections on the boundaries of the interpolation.
+In Section \ref{examples} we provided a way to circumvent this problem, giving adequate results in that example.
+For these methods there are a lot of possible variations, as one could go to arbitrary orders of polynomials.
+In future research one could look at the accuracy of those methods as they would be easy to implement.
+
+The separate interpolation method could also be made easier to implement by using polynomial interpolation instead of spline interpolation.
+We did not compute the results for this new method.
+This would promote the separate interpolation even more as the downside of difficult implementations would reduce.

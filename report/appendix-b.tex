@@ -1,0 +1,624 @@
+\chapter{Proofs concerning Cotesian numbers}
+\label{app:proofs}
+
+Here we provide proofs for statements from Subsection \ref{sec:cotesian}.
+
+\begin{lemma}
+\label{lemma:invertible}
+The Vandermonde matrix
+\begin{equation}
+    V =
+    \begin{bmatrix}
+        1&0&0&\cdots&0 \\
+        1&1&1&\cdots&1 \\
+        1&2&2^2&\cdots&2^n \\
+        \vdots&\vdots & \vdots & \ddots & \vdots\\
+        1&n&n^2&\cdots&n^n
+    \end{bmatrix} \nonumber
+\end{equation}
+is invertible.
+\end{lemma}
+\begin{proof}
+We show by contradiction that the columns of $V$ are linearly independent.
+
+Denote the $j$-column of matrix $V$ as $\mathbf v_j$, we thus have $\mathbf v_j = \begin{bmatrix} 0^j & 1^j & \cdots & n^j \end{bmatrix}^\top \in \mathbb R^{n+1}$.
+Assume that there exist coefficients $a_0, a_1, \dots, a_n \in \mathbb R$ such that $a_0 \mathbf v_0 + a_1 \mathbf v_1 + \cdots + c_n \mathbf v_n = \mathbf 0$, where $\mathbf 0 = \begin{bmatrix} 0 & 0 & \cdots & 0 \end{bmatrix}^\top \in \mathbb R^{n+1}$.
+Then, for each $k\in \mathbb N$ with $0 \leq k \leq n$ we get
+\begin{equation}
+    a_0 + a_1 k + a_2 k^2 + \cdots + a_n k^n = 0 \,.\nonumber
+\end{equation}
+Hence, $k$ is a root of the polynomial $f(x) = a_0 + a_1 x + a_2 x^2 + \cdots + a_n x^n$.
+This means that the polynomial $f(x)$ has $n+1$ different roots.
+Since $f(x)$ is at most an $n$th-order polynomial we must have $a_0 = a_1 = \cdots = a_n = 0$.
+Proving that the columns of matrix $V$ are indeed linearly independent, therefore, the matrix is invertible.
+\end{proof}
+
+
+\begin{theorem}
+\label{theorem:mat}
+Define $f: \mathbb R \to \mathbb R$, and let $x_0, x_1, \dots, x_n \in \mathbb R$ denote equidistant real numbers.
+Denote their function values as $f_0, f_1, \dots f_n \in \mathbb R$, respectively (thus $f_0=f(x_0)$, $f_1=f(x_1)$, \dots, $f_n = f(x_n)$).
+Furthermore, let $h$ denote the distance between the equidistant numbers, that is, $h=\frac{x_n-x_0}{n}$.
+Also, let $c_0, c_1, \dots c_n$ denote the Cotesian numbers, i.e. the numbers such that after interpolating the function values by a polynomial of degree at most $n$ the integral over the polynomial can be approximated by
+\begin{equation}
+    \int_{x_0}^{x_n} f(x) \mathrm dx \approx h(c_0 f_0 + c_1f_1 + \cdots + c_nf_n) \,. \nonumber
+\end{equation}
+Then, $c_0, c_1, \dots, c_n$ satisfy
+\begin{equation}
+    \begin{bmatrix}
+        1&0&0&\cdots&0 \\
+        1&1&1&\cdots&1 \\
+        1&2&2^2&\cdots&2^n \\
+        \vdots&\vdots & \vdots & \ddots & \vdots\\
+        1&n&n^2&\cdots&n^n
+    \end{bmatrix}^\top
+    \begin{bmatrix}
+        c_0\\
+        c_1\\
+        c_2\\
+        \vdots \\
+        c_n
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+        n/1 \\
+        n^2/2 \\
+        n^3/3 \\
+        \vdots \\
+        n^{n+1}/(n+1)
+    \end{bmatrix} \,.\nonumber
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Without loss of generality we let $x_0 = 0$ (this can be verified by defining $x_0'=x_0-x_0$, $x_1'=x_1-x_0$, \dots, $x_n'=x_n-x_0$ and noting that $\int_{x_0}^{x_n} f(x) \mathrm d x = \int_{0}^{x_n'} f(x') \mathrm dx'$).
+Employing this new definition allows us to write $x_i = ih$ for $0 \leq i \leq n$.
+
+All interpolating polynomials $p(x)=p_0 + p_1 x + p_2 x^2 + \cdots + p_n x^n$ must satisfy $p(x_0)=f_0$, $p(x_1)=f_1$, \dots, $p(x_n)=f_n$, hence, the coefficients $p_0, p_1, \dots, p_n$ satisfy
+\begin{equation}
+    \underbrace{\begin{bmatrix}
+        1&x_0&x_0^2&\cdots&x_0^n \\
+        1&x_1&x_1^2&\cdots&x_1^n \\
+        1&x_2&x_2^2&\cdots&x_2^n \\
+        \vdots&\vdots & \vdots & \ddots & \vdots\\
+        1&x_n&x_n^2&\cdots&x_n^n
+    \end{bmatrix}}_{A}
+    \underbrace{\begin{bmatrix}
+        p_0\\
+        p_1\\
+        p_2\\
+        \vdots \\
+        p_n
+    \end{bmatrix}}_{\mathbf p}
+    =
+    \underbrace{\begin{bmatrix}
+        f_0 \\
+        f_1 \\
+        f_2 \\
+        \vdots \\
+        f_n
+    \end{bmatrix}}_{\mathbf f} \,.\label{eq:mat1}
+\end{equation}
+Also, we know that integrating $p(x)$ yields the approximation of the integral, equalling $h(c_0 f_0 + c_1f_1 + \cdots + c_nf_n)$, giving the relation
+\begin{align}
+    \int_{x_0}^{x_n} p(x) \mathrm d x &=
+    \int_{0}^{nh} p(x) \mathrm d x =
+    \left[ p_0 x + p_1 \frac{x^2}{2} + p_2 \frac{x^3}{3} + \dots + p_n \frac{x^{n+1}}{n+1} \right]_{0}^{nh} \nonumber \\
+                                      &= p_0 \frac{nh}{1} + p_1 \frac{(nh)^2}{2} + p_2 \frac{(nh)^3}{3} + \dots + p_n \frac{(nh)^{n+1}}{n+1} = h(c_0 f_0 + c_1 f_2 + \cdots + c_n f_n) \,. \nonumber
+\end{align}
+After removing a factor $h$ from both sides of the equal sign we use vector notation to rewrite the equation into
+\begin{equation}
+    \underbrace{\begin{bmatrix}
+        n/1\\
+        n^2h/2\\
+        n^3h^2/3\\
+        \vdots \\
+        n^{n+1}h^n/(n+1)
+    \end{bmatrix}^\top}_{\mathbf n^\top}
+    \begin{bmatrix}
+        p_0\\
+        p_1\\
+        p_2\\
+        \vdots \\
+        p_n
+    \end{bmatrix}
+    =
+    \underbrace{\begin{bmatrix}
+        c_0 \\
+        c_1 \\
+        c_2 \\
+        \vdots \\
+        c_n
+    \end{bmatrix}^\top}_{\mathbf c^\top}
+    \begin{bmatrix}
+        f_0 \\
+        f_1 \\
+        f_2 \\
+        \vdots \\
+        f_n
+    \end{bmatrix} \,. \label{eq:mat2}
+\end{equation}
+This allows for shorter notation; equation \ref{eq:mat1} can be written as
+\begin{equation}
+    A \mathbf p = \mathbf f \,, \nonumber
+\end{equation}
+and equation \ref{eq:mat2} can be written as
+\begin{equation}
+    \mathbf n ^\top \mathbf p = \mathbf c^\top \mathbf f \,. \nonumber
+\end{equation}
+Using these equalities we can deduce that (note that $A$ is invertible due to Lemma \ref{lemma:invertible}):
+\begin{align}
+    \mathbf p &= A^{-1} \mathbf f \nonumber \\
+    \mathbf n^\top \mathbf p = \mathbf n^\top A^{-1} \mathbf f &= \mathbf c^\top \mathbf f \nonumber \\
+    \mathbf f^\top (A^{-1})^\top \mathbf n  &= \mathbf f^\top \mathbf c, \quad \textrm{for arbitrary $\mathbf f$} \nonumber \\
+    (A^{-1})^\top \mathbf n  &= \mathbf c \nonumber \\
+    \mathbf n  &= A^\top \mathbf c \,. \nonumber
+\end{align}
+Writing this out and substituting $x_i = ih$ gives us:
+\begin{equation}
+    \begin{bmatrix}
+        1&0&0&\cdots&0 \\
+        1&h&h^2&\cdots&h^n \\
+        1&2h&(2h)^2&\cdots&(2h)^n \\
+        \vdots&\vdots & \vdots & \ddots & \vdots\\
+        1&nh&(nh)^2&\cdots&(nh)^n
+    \end{bmatrix}^\top
+    \begin{bmatrix}
+        c_0 \\
+        c_1 \\
+        c_2 \\
+        \vdots \\
+        c_n
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+        n/1\\
+        n^2h/2\\
+        n^3h^2/3\\
+        \vdots \\
+        n^{n+1}h^n/(n+1)
+    \end{bmatrix} \,. \nonumber
+\end{equation}
+Removing $h$ (we can this do due to the transposition of the matrix) results in
+\begin{equation}
+    \begin{bmatrix}
+        1&0&0&\cdots&0 \\
+        1&1&1^2&\cdots&1^n \\
+        1&2&2^2&\cdots&2^n \\
+        \vdots&\vdots & \vdots & \ddots & \vdots\\
+        1&n&n^2&\cdots&n^n
+    \end{bmatrix}^\top
+    \begin{bmatrix}
+        c_0 \\
+        c_1 \\
+        c_2 \\
+        \vdots \\
+        c_n
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+        n/1\\
+        n^2/2\\
+        n^3/3\\
+        \vdots \\
+        n^{n+1}/(n+1)
+    \end{bmatrix} \,, \nonumber
+\end{equation}
+concluding our proof.
+\end{proof}
+
+\begin{definition}
+Let $X = \{ X_1, X_2, \dots, X_n \}$ with $X_1, X_2, \dots, X_n \in \mathbb R$ and let $k \in \mathbb N_{\geq0}$.
+The elementary symmetric polynomial is then defined as:
+\begin{equation}
+    e_k(X) = \begin{dcases}
+        1 & \textrm{ if } k = 0\,, \\
+        \sum_{1 \leq m_1 < \cdots < m_k \leq n} X_{m_1} \cdots X_{m_k} & \textrm{ if } 1 \leq k \leq n\,, \\
+        0 & \textrm{ if } k > n\,.
+    \end{dcases} \nonumber
+\end{equation}
+\end{definition}
+
+
+\begin{lemma}
+\label{lemma:complete}
+Let $s(n, k)$, with $n,k \in \mathbb N_{\geq 0}$ denote the (un)signed Stirling numbers of the first kind, then, if $0\leq j \leq \ell$ with $j,\ell \in \mathbb N$, the following equality holds:
+\begin{equation}
+    e_j(\{ 1, 2, \dots, \ell \}) = |s(\ell+1, \ell+1-j)| \,. \label{eq:ind_step}
+\end{equation}
+\end{lemma}
+\begin{proof}
+We use induction twice to complete the proof.
+
+First, we use induction on $j$.
+For the induction base with $j=0$ we note that by definition:
+$e_j(\{ 1, 2, \dots, \ell \}) = 1 = |s(\ell+1, \ell+1)| \,.$
+For the induction hypothesis we assume that
+$e_{j-1} ( \{ 1, 2, \dots, \ell \}) = |s(\ell+1, \ell+2-j)| \,.$
+For the induction step we then need to show that equation \ref{eq:ind_step} holds.
+
+We do this using induction on $\ell$.
+For the induction base $\ell=0$ and thus $j=0$, we get
+$e_0 ( \emptyset ) = 1 = |s(1, 1)|\,.$
+For the induction hypothesis we assume
+$e_j (\{ 1, 2, \dots, \ell-1 \}) = |s(\ell, \ell-j)| \,, \nonumber$
+applying this to our previous assumption yields
+$e_{j-1} (\{ 1, 2, \dots, \ell-1 \}) = |s(\ell, \ell+1-j)| \,.$
+For the induction step we need to prove equation \ref{eq:ind_step}.
+Note that by the definition of the Stirling numbers we have \cite[equation 15]{stirling_def}:
+\begin{equation}
+    |s(n,k)| = |s(n-1, k-1)| + (n-1) |s(n-1, k)| \,. \nonumber
+\end{equation}
+Using our induction hypotheses we now show that equation \ref{eq:ind_step} holds
+\begin{align}
+    e_j(\{ 1, 2, \dots, \ell \}) &= \sum_{1 \leq m_1 < \cdots < m_{j} \leq \ell} m_1 \cdots m_j \nonumber \\
+                                 &= \sum_{\substack{1 \leq m_1 < \cdots < m_{j-1} \leq \ell-1 \\ m_{j-1} < m_j < \ell}} m_1 \cdots m_j + \sum_{\substack{1 \leq m_1 < \cdots < m_{j-1} \leq \ell-1 \\ m_{j-1} < m_j = \ell}} m_1 \cdots m_j \nonumber \\
+                                 &= \sum_{1 \leq m_1 < \cdots < m_{j} \leq \ell-1} m_1 \cdots m_j + \ell \sum_{1 \leq m_1 < \cdots < m_{j-1} \leq \ell-1} m_1 \cdots m_{j-1} \nonumber \\
+                                 &= e_j(\{ 1, 2, \dots, \ell-1 \}) + \ell e_{j-1}(\{ 1, 2, \dots, \ell-1 \}) \nonumber \\
+                                 &= |s(\ell, \ell-j)| + \ell |s(\ell, \ell+1-j)| \nonumber \\
+                                 &= |s(\ell+1, \ell+1-j)|\,. \nonumber
+\end{align}
+Hence, the induction step, equation \ref{eq:ind_step}, holds, concluding our proof.
+\end{proof}
+
+
+
+
+\begin{lemma}
+\label{lemma:missing}
+Let $0 \leq i \leq n$ with $i \in \mathbb N$, also, let $0 \leq k \leq n$ with $k,n \in \mathbb N$, then the following relation holds:
+\begin{equation}
+    e_{k} ( \{ 1, \dots, n \} \setminusD \{ i \}) = \sum_{m=0}^{k} (-i)^m e_{k-m}(\{ 1, \dots, n \}) \,. \nonumber
+\end{equation}
+\end{lemma}
+\begin{proof}
+This relation can easily be seen to hold for $1 \leq i \leq n$ since
+\begin{equation}
+    e_{k} ( \{ 1, \dots, n \} \setminusD \{ i \}) = e_{k} ( \{ 1, \dots, n \}) - i e_{k-1} ( \{ 1, \dots, n \} \setminusD \{ i \}) \,, \nonumber
+\end{equation}
+and $e_0(\{ 1, \dots, n \} \setminusD \{ i \}) = 1 = e_0(\{ 1, \dots, n \})$.
+
+For $i=0$ the relation also holds since $e_k(\{ 1, \dots, n \} \setminusD \{ 0 \}) = e_k(\{ 1, \dots, n \}) - 0$.
+\end{proof}
+
+
+\begin{theorem}
+\label{theorem:calc}
+We can calculate the coefficients of $c_i$ for $i \in \{ 0, \dots, n \}$ in the following equation
+\begin{equation}
+    \begin{bmatrix}
+        1&0&0&\cdots&0 \\
+        1&1&1^2&\cdots&1^n \\
+        1&2&2^2&\cdots&2^n \\
+        \vdots&\vdots & \vdots & \ddots & \vdots\\
+        1&n&n^2&\cdots&n^n
+    \end{bmatrix}^\top
+    \begin{bmatrix}
+        c_0 \\
+        c_1 \\
+        c_2 \\
+        \vdots \\
+        c_n
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+        n/1\\
+        n^2/2\\
+        n^3/3\\
+        \vdots \\
+        n^{n+1}/(n+1)
+    \end{bmatrix} \label{eq:vander}
+\end{equation}
+by computing
+\begin{equation}
+    c_i =
+        % \frac{1}{(n-1)!} \sum_{j=0}^{n} \frac{n^j (-1)^{n} s(n+1, j+1) }{j+1} & i = 0 \\
+        \frac{1}{(n-1)!} \binom{n}{i} \sum_{j=0}^{n} \sum_{m=0}^{n-j} i^m n^{j} \frac{(-1)^{i+n} s(n+1, j+m+1) }{j+1} \,. \nonumber
+        % \frac{1}{(n-1)!} \sum_{j=0}^{n} \frac{n^{j} s(n,j)}{j+1} & i = n
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+We first rewrite equation by transposing the matrix in equation \ref{eq:vander} and bringing it to the other side, yielding
+\begin{equation}
+    \begin{bmatrix}
+        c_0 \\
+        c_1 \\
+        c_2 \\
+        \vdots \\
+        c_n
+    \end{bmatrix}
+    =
+    \underbrace{\begin{bmatrix}
+        1&1&1&\cdots&1 \\
+        0&1&2&\cdots&n \\
+        0&1^2&2^2&\cdots&n^2 \\
+        \vdots&\vdots & \vdots & \ddots & \vdots\\
+        0&1^n&2^n&\cdots&n^n
+    \end{bmatrix}^{-1}}_{(W_{n+1}^{-1})^\top}
+    \begin{bmatrix}
+        n/1\\
+        n^2/2\\
+        n^3/3\\
+        \vdots \\
+        n^{n+1}/(n+1)
+    \end{bmatrix} \,, \nonumber
+\end{equation}
+where the matrix $W_{n+1}$ is the Vandermonde matrix defined according to \citeauthor{stirling_vandermonde} \cite{stirling_vandermonde}.
+The inverse of the matrix (without transposition) is also given by \citeauthor{stirling_vandermonde} and turns out to be
+\begin{equation}
+    [W_{n+1}^{-1}]_{ij} = \frac{(-1)^{n-i} e_{n-i} (\{ 0, 1, \dots, n \} \setminusD \{ j \})}{\prod^{n+1}_{m=0, m\neq j} (j - m)} \,, \nonumber
+\end{equation}
+note that in the citation $i,j \in \{ 1, \dots, n \}$, whereas here we define $i,j \in \{ 0, \dots, n \}$.
+Transposing this matrix and noting that we can safely omit $0$ in the set yields
+\begin{equation}
+    [(W_{n+1}^{-1})^\top]_{ij} = \frac{(-1)^{n-j} e_{n-j} (\{ 1, \dots, n \} \setminusD \{ i \})}{\prod^{n}_{m=0, m\neq i} (i - m)} \,. \nonumber
+\end{equation}
+Using this matrix we can then compute the coefficients of $c_i$ by using the following relation
+\begin{align}
+    c_i &= \sum_{j=0}^{n} \left[(W_{n+1}^{-1})^\top\right]_{ij} n^{j+1}/(j+1) \nonumber \\
+        &= \sum_{j=0}^{n} n^{j+1} \frac{(-1)^{n-j} e_{n-j} (\{ 1, \dots, n \} \setminusD \{ i \})}{(j+1) \prod^{n}_{m'=0, m'\neq i} (i - m')} \,. \label{eq:ci}
+\end{align}
+Since $0 \leq i \leq n$ we can simplify the product in the denominator to
+\begin{equation}
+    \prod^{n}_{m=0, m\neq i} (i - m) = i \cdot (i-1) \cdots 2 \cdot 1 \cdot -1 \cdot -2 \cdots (i-n-1) \cdot (i-n) = i! (n-i)! (-1)^{n-i} \,. \nonumber
+\end{equation}
+Also, from Lemma \ref{lemma:complete} in combination with Lemma \ref{lemma:missing} we have that
+\begin{equation}
+    e_{n-j} (\{ 1, \dots, n \} \setminusD \{ i \}) = \sum_{m=0}^{n-j} (-i)^m |s(n+1, n+1-(n-j-m))| \,. \nonumber
+\end{equation}
+Substituting these relations into equation \ref{eq:ci} yields
+\begin{align}
+    c_i &= \sum_{j=0}^{n} n^{j+1} \frac{(-1)^{n-j} e_{n-j} (\{ 1, \dots, n \} \setminusD \{ i \})}{(j+1) i! (n-i)! (-1)^{n-i}} \nonumber \\
+        &= \sum_{j=0}^{n} n^{j+1} \frac{(-1)^{n-j} \sum_{m=0}^{n-j} (-i)^m |s(n+1, n+1-(n-j)+m)| }{(j+1) i! (n-i)! (-1)^{n-i}} \nonumber \\
+        &= \frac{1}{(n-1)!} \binom{n}{i} \sum_{j=0}^{n} n^{j} \frac{(-1)^{i-j} \sum_{m=0}^{n-j} (-i)^m |s(n+1, j+m+1)| }{j+1} \nonumber \\
+        &= \frac{1}{(n-1)!} \binom{n}{i} \sum_{j=0}^{n} \sum_{m=0}^{n-j} i^m  n^{j} \frac{(-1)^{i-j+m} (-1)^{n-j-m} s(n+1, j+m+1) }{j+1} \nonumber \\
+        &= \frac{1}{(n-1)!} \binom{n}{i} \sum_{j=0}^{n} \sum_{m=0}^{n-j} i^m n^{j} \frac{(-1)^{i+n} s(n+1, j+m+1) }{j+1} \,. \nonumber
+\end{align}
+% We see that for $i=0$ (which we separately derive from equation \ref{eq:ci}), using Lemma \ref{lemma:complete}, we obtain the relation
+% \begin{align}
+%     c_0 &= \sum_{j=0}^{n} n^{j+1} \frac{(-1)^{n-j} e_{n-j} (\{ 1, \dots, n \} \setminusD \{ 0 \})}{(j+1) \prod^{n}_{m'=0, m'\neq 0} (0 - m')} \nonumber \\
+%         &= \frac{1}{(n-1)!} \sum_{j=0}^{n} \frac{n^j (-1)^{n} s(n+1, j+1) }{j+1} \,. \nonumber
+%         % &= \frac{1}{(n-1)!} \sum_{j=0}^{n} \frac{n^j (-1)^{n} [s(n,j)] }{j+1} + \frac{1}{(n-1)!} \sum_{j=0}^{n-1} \frac{n^j (-1)^{n} [-ns(n,j+1)] }{j+1} \nonumber \\
+%         % &= \frac{1}{(n-1)!} \sum_{j=0}^{n} \frac{n^j (-1)^{n} [s(n,j)] }{j+1} + \frac{1}{(n-1)!} \sum_{j=1}^{n} \frac{n^{j} (-1)^{n+1} [s(n,j)] }{j} \nonumber \\
+%         % &= \left[ \frac{1}{(n-1)!} \frac{n^j (-1)^{n} [s(n,j)] }{j+1} \right]_{j=0} + \frac{(-1)^n}{(n-1)!} \sum_{j=1}^{n} \frac{n^j s(n,j) }{j+1} - \frac{n^{j} s(n,j) }{j} \nonumber \\
+%         % &= \left[ \frac{1}{(n-1)!} \frac{n^j (-1)^{n} [s(n,j)] }{j+1} \right]_{j=0} + \frac{(-1)^n}{(n-1)!} \sum_{j=1}^{n} \frac{j n^j s(n,j) - (j+1) n^{j} s(n,j) }{j(j+1)} \nonumber \\
+%         % &= \left[ \frac{1}{(n-1)!} \frac{n^j (-1)^{n} [s(n,j)] }{j+1} \right]_{j=0} + \frac{(-1)^n}{(n-1)!} \sum_{j=1}^{n} \frac{-n^j s(n,j)}{j(j+1)} \nonumber
+% \end{align}
+% Likewise, for the case $i=n$ equation \ref{eq:ci} can be simplified using Lemma \ref{lemma:complete}, resulting in
+% \begin{align}
+%     c_n &= \sum_{j=0}^{n} n^{j+1} \frac{(-1)^{n-j} e_{n-j} (\{ 1, \dots, n \} \setminusD \{ n \})}{(j+1) n! (n-n)! (-1)^{n-n}} \nonumber \\
+%         &= \frac{1}{(n-1)!} \sum_{j=0}^{n} \frac{n^{j} (-1)^{n-j} e_{n-j} (\{ 1, \dots, n-1 \})}{j+1} \nonumber \\
+%         &= \frac{1}{(n-1)!} \sum_{j=0}^{n} \frac{n^{j} s(n,j)}{j+1} \,. \nonumber
+% \end{align}
+Proving the theorem.
+\end{proof}
+
+
+
+
+
+% \clearpage
+% \clearpage
+
+% \begin{proof}
+% Some cases \textsc{WE MUST HAVE $n > 0$ FOR THE LAST STEP}:
+% \begin{align}
+%     c_n &= \sum_{j=0}^{n} n^{j+1} \frac{(-1)^{n-j} e_{n-j} (\{ 0, \dots, n \} \setminus \{ n \})}{(j+1) \prod^{n}_{m'=0, m'\neq n} (n - m')} \nonumber \\
+%         &= \sum_{j=0}^{n} n^{j+1} \frac{(-1)^{n-j} e_{n-j} (\{ 0, \dots, n-1 \})}{(j+1) \prod^{n-1}_{m'=0} (n - m')} \nonumber \\
+%         &= \frac{1}{(n-1)!} \sum_{j=0}^{n} n^{j} \frac{(-1)^{n-j} e_{n-j} (\{ 0, \dots, n-1 \})}{(j+1)} \nonumber \\
+%         &= \frac{1}{(n-1)!} \sum_{j=0}^{n} n^{j} \frac{(-1)^{n-j} e_{n-j} (\{ 1, \dots, n-1 \})}{(j+1)} \nonumber \\
+%         &= \frac{1}{(n-1)!} \sum_{j=0}^{n} \frac{n^j s(n,j)}{(j+1)} \nonumber \\
+%         &= \frac{1}{(n-1)!} \sum_{j=1}^{n} \frac{n^j s(n,j)}{(j+1)} \nonumber
+% \end{align}
+% Note, that from lemma 2:
+% \begin{equation}
+%     e_j(\{ 1, \dots, \ell \}) = |s(\ell+1, \ell+1-j)| \nonumber
+% \end{equation}
+% Hence:
+% \begin{equation}
+%     e_{n-j}(\{ 1, \dots, n \}) = |s(n+1, n+1-(n-j))| = |s(n+1, j+1)| = (-1)^{n-j} s(n+1, j+1) \nonumber
+% \end{equation}
+% Thus:
+% \begin{align}
+%     c_0 &= \sum_{j=0}^{n} n^{j+1} \frac{(-1)^{n-j} e_{n-j} (\{ 0, \dots, n \} \setminus \{ 0 \})}{(j+1) \prod^{n}_{m'=0, m'\neq 0} (0 - m')} \nonumber \\
+%         &= \sum_{j=0}^{n} n^{j+1} \frac{(-1)^{n-j} e_{n-j} (\{ 1, \dots, n \} )}{(j+1) (-1)^n n!} \nonumber \\
+%         &= \frac{1}{(n-1)!} \sum_{j=0}^{n} \frac{n^j (-1)^{j} e_{n-j} (\{ 1, \dots, n \})}{(j+1)} \nonumber \\
+%         &= \frac{1}{(n-1)!} \sum_{j=0}^{n} \frac{n^j (-1)^{j} (-1)^{n-j} s(n+1, j+1)}{(j+1)} \nonumber \\
+%         &= \frac{(-1)^{n}}{(n-1)!} \sum_{j=0}^{n} \frac{n^j s(n+1, j+1)}{j+1} \nonumber
+% \end{align}
+% Else:
+% \begin{equation}
+%     c_i = \sum_{j=0}^{n} n^{j+1} \frac{(-1)^{n-j} e_{n-j} (\{ 0, \dots, n \} \setminus \{ i \})}{(j+1) \prod^{n}_{m'=0, m'\neq i} (i - m')} \nonumber
+% \end{equation}
+% Thus:
+% \begin{align}
+%     c_i &= \sum_{j=0}^{n} n^{j+1} \frac{(-1)^{n-j} e_{n-j} (\{ 0, \dots, n \} \setminus \{ i \})}{(j+1) i! (n-i)! (-1)^{n-i}} \nonumber \\
+%         &= \frac{1}{n!} \binom{n}{i} \sum_{j=0}^{n} n^{j+1} \frac{(-1)^{j} e_{n-j} (\{ 0, \dots, n \} \setminus \{ i \})}{(j+1) (-1)^{i}} \nonumber \\
+%         &= \frac{1}{(n-1)!} \binom{n}{i} \sum_{j=0}^{n} n^j \frac{(-1)^{j-i} e_{n-j} (\{ 0, \dots, n \} \setminus \{ i \})}{(j+1)} \nonumber \\
+%         &= \frac{1}{(n-1)!} \binom{n}{i} \sum_{j=0}^{n} n^j \frac{(-1)^{j-i}}{(j+1)} \sum_{k=0}^{n-j} e_{k} (\{ 0, \dots, i-1 \}) e_{n-j-k} (\{ i+1, \dots, n \}) \nonumber \\
+%         &= \frac{1}{(n-1)!} \binom{n}{i} \sum_{j=0}^{n} n^j \frac{(-1)^{j-i}}{(j+1)} \sum_{k=0}^{n-j} (-1)^k s(i,i-k) e_{n-j-k} (\{ i+1, \dots, n \}) \nonumber \\
+%         &= \frac{1}{(n-1)!} \binom{n}{i} \sum_{j=0}^{n} \sum_{k=0}^{n-j} n^j \frac{(-1)^{j-i}}{(j+1)} (-1)^k s(i,i-k) e_{n-j-k} (\{ i+1, \dots, n \}) \nonumber
+% \end{align}
+% Also, we have:
+% \begin{equation}
+%     e_{k} (\{ i+1, \dots, n \}) = e_{k} (\{ i, \dots, n \}) - i e_{k-1} (\{ i+1, \dots, n \}) \nonumber
+% \end{equation}
+% ANd:
+% \begin{equation}
+%     e_{k} (\{ 1, \dots, n \}) = (-1)^k s(n+1, n+1-k) \nonumber
+% \end{equation}
+% Renaming:
+% \begin{equation}
+%     d (k, i) = d(k, i-1) - (i-1) d (k-1, i) \nonumber
+% \end{equation}
+% ANd:
+% \begin{equation}
+%     d (k, 1) = (-1)^k s(n+1, n+1-k) \nonumber
+% \end{equation}
+% \begin{equation}
+%     d (0, i) = 1 \nonumber
+% \end{equation}
+
+
+% \end{proof}
+% \clearpage
+
+
+
+% \begin{proof}
+% We proof this now, rewriting the equation gives
+% \begin{equation}
+%     \begin{bmatrix}
+%         c_0 \\
+%         c_1 \\
+%         c_2 \\
+%         \vdots \\
+%         c_n
+%     \end{bmatrix}
+%     =
+%     \begin{bmatrix}
+%         1&1&1&\cdots&1 \\
+%         0&1&2&\cdots&n \\
+%         0&1^2&2^2&\cdots&n^2 \\
+%         \vdots&\vdots & \vdots & \ddots & \vdots\\
+%         0&1^n&2^n&\cdots&n^n
+%     \end{bmatrix}^{-1}
+%     \begin{bmatrix}
+%         n/1\\
+%         n^2/2\\
+%         n^3/3\\
+%         \vdots \\
+%         n^{n+1}/(n+1)
+%     \end{bmatrix} \nonumber
+% \end{equation}
+% To go one step lower (up to $n-1$, for other reasons, the subscripts would get tedious) we define
+% % \begin{equation}
+% %     \underbrace{\begin{bmatrix}
+% %         1&1&1&\cdots&1 \\
+% %         0&1&2&\cdots&n-1 \\
+% %         0&1^2&2^2&\cdots&(n-1)^2 \\
+% %         \vdots&\vdots & \vdots & \ddots & \vdots\\
+% %         0&1^{n-1}&2^{n-1}&\cdots&(n-1)^{n-1}
+% %     \end{bmatrix}^{-1}}_{(W_n^{-1})^\top}
+% % \end{equation}
+% \begin{equation}
+%     \underbrace{\begin{bmatrix}
+%         1&1&1&\cdots&1 \\
+%         0&1&2&\cdots&n \\
+%         0&1^2&2^2&\cdots&n^2 \\
+%         \vdots&\vdots & \vdots & \ddots & \vdots\\
+%         0&1^n&2^n&\cdots&n^n
+%     \end{bmatrix}^{-1}}_{(W_n^{-1})^\top} \nonumber
+% \end{equation}
+
+% By \url{https://proofwiki.org/wiki/Inverse_of_Vandermonde_Matrix} (which is 1-indexed, we are not, thus we do something ($n-1\to n$ and $j-1 \to j$ and $x_i \to x_{i-1}$ and $i-1 \to i$)) we have:
+% \begin{equation}
+%     \left[(W_n^{-1})^\top\right]_{ij} (\textrm{1-indexed}) = \begin{dcases}
+%         (-1)^{j-1} \left[ \frac{\sum\limits_{\substack{1\leq m_1 < \dots < m_{n-j} \leq n \\ m_1, \dots, m_{n-j} \neq i}} x_{m_1} \cdot x_{m_2} \cdots x_{m_{n-j-1}} \cdot x_{m_{n-j}}}{\prod\limits_{\substack{1\leq m \leq n \\ m \neq i}} (x_m - x_i)} \right] & 1 \leq j < n \\
+%         \frac{1}{\prod\limits_{\substack{1\leq m \leq n \\ m \neq i}} (x_i - x_m)} & j = n
+%     \end{dcases} \nonumber
+% \end{equation}
+% We also have that the final answer can be written as:
+% \begin{equation}
+%     c_i = \sum_{j=1}^{n} \left[(W_n^{-1})^\top\right]_{ij} n^{j}/j \nonumber
+% \end{equation}
+% Equals (still 1-indexed), also $x_i = i - 1$
+% \begin{equation}
+%     c_i = \sum_{j=1}^{n} n^{j}/j \begin{dcases}
+%         (-1)^{j-1} \left[ \frac{\sum\limits_{\substack{1\leq m_1 < \dots < m_{n-j} \leq n \\ m_1, \dots, m_{n-j} \neq i}} (m_1-1) \cdots (m_{n-j}-1)}{\prod\limits_{\substack{1\leq m \leq n \\ m \neq i}} (m - i)} \right] & 1 \leq j < n \\
+%         \frac{1}{\prod\limits_{\substack{1\leq m \leq n \\ m \neq i}} (i - m)} & j = n
+%     \end{dcases} \nonumber
+% \end{equation}
+
+% For $i=1$ (remember, 1-indexed):
+% \begin{align}
+%     c_0 &= \sum_{j=1}^{n} n^{j}/j \begin{dcases}
+%         (-1)^{j-1} \left[ \frac{\sum\limits_{\substack{1\leq m_1 < \dots < m_{n-j} \leq n \\ m_1, \dots, m_{n-j} \neq 1}} (m_1-1) \cdots (m_{n-j}-1)}{\prod\limits_{\substack{1\leq m \leq n \\ m \neq 1}} (m - 1)} \right] & 1 \leq j < n \\
+%         \frac{1}{\prod\limits_{\substack{1\leq m \leq n \\ m \neq 1}} (1 - m)} & j = n
+%     \end{dcases} \nonumber \\
+%         &= \sum_{j=1}^{n} n^{j}/j \begin{dcases}
+%         (-1)^{j-1} \left[ \frac{\sum\limits_{\substack{1\leq m_1 < \dots < m_{n-j} \leq n \\ m_1, \dots, m_{n-j} \neq 1}} (m_1-1) \cdots (m_{n-j}-1)}{\prod\limits_{1\leq m' \leq n-1} (m')} \right] & 1 \leq j < n \\
+%         \frac{1}{\prod\limits_{1\leq m' \leq n-1} (-m')} & j = n
+%     \end{dcases} \nonumber \\
+%         &= \frac{1}{(n-1)!} \sum_{j=1}^{n} n^{j}/j \begin{dcases}
+%         (-1)^{j-1} \left[ \sum\limits_{1 \leq m_1' < \dots < m_{n-j}' \leq n-1} m_1' \cdots m_{n-j}' \right] & 1 \leq j < n \\
+%         (-1)^{n-1} & j = n
+%     \end{dcases} \nonumber \\
+%         &= \frac{1}{(n-1)!} \sum_{j=1}^{n} n^{j}/j \begin{dcases}
+%         (-1)^{j-1} \left[ (-1)^{j-1} s(n-1, j-1) \right] & 1 \leq j < n \\
+%         (-1)^{n-1} & j = n
+%     \end{dcases} \nonumber \\
+%         &= \frac{1}{(n-1)!} \sum_{j=1}^{n} n^{j}/j \begin{dcases}
+%         s(n-1, j-1) & 1 \leq j < n \\
+%         (-1)^{n-1} & j = n
+%     \end{dcases} \nonumber
+% \end{align}
+
+
+
+
+
+
+% \clearpage
+% Equalling:
+% \begin{equation}
+%     \left[(W_n^{-1})^\top\right]_{ij} = \begin{dcases}
+%         (-1)^{j} \left[ \frac{\sum\limits_{\substack{1\leq m_1 < \dots < m_{n-j} \leq n+1 \\ m_1, \dots, m_{n-j} \neq i+1}} x_{m_1-1} \cdot x_{m_2-1} \cdots x_{m_{n-j-1}-1} \cdot x_{m_{n-j}-1}}{\prod\limits_{\substack{1\leq m \leq n+1 \\ m \neq i+1}} (x_{m-1} - x_{i})} \right] & 0 \leq j < n \\
+%         \frac{1}{\prod\limits_{\substack{1\leq m \leq n+1 \\ m \neq i+1}} (x_{i} - x_{m-1})} & j = n
+%     \end{dcases} \nonumber
+% \end{equation}
+% With $x_0 = 0$, $x_1 = 1$, \dots, $x_n = n$, note that also $x_i = i$.
+% Filling in gives (and $m_{i}-1 \to m_{i}$):
+% \begin{equation}
+%     \left[(W_n^{-1})^\top\right]_{ij} = \begin{dcases}
+%         (-1)^{j} \left[ \frac{\sum\limits_{\substack{0\leq m_1 < \dots < m_{n-j} \leq n \\ m_1, \dots, m_{n-j} \neq i}} m_1 \cdot m_2 \cdots m_{n-j-1} \cdot m_{n-j}}{\prod\limits_{\substack{0\leq m \leq n \\ m \neq i}} (m - i)} \right] & 0 \leq j < n \\
+%         \frac{1}{\prod\limits_{\substack{0\leq m \leq n \\ m \neq i}} (i - m)} & j = n
+%     \end{dcases} \nonumber
+% \end{equation}
+% We also have that the final answer can be written as:
+% \begin{equation}
+%     c_i = \sum_{j=0}^{n} \left[(W_n^{-1})^\top\right]_{ij} n^{j+1}/(j+1) \nonumber
+% \end{equation}
+% Thus:
+% \begin{equation}
+%     c_i = \sum_{j=0}^{n} n^{j+1}/(j+1) \begin{dcases}
+%         (-1)^{j} \left[ \frac{\sum\limits_{\substack{0\leq m_1 < \dots < m_{n-j} \leq n \\ m_1, \dots, m_{n-j} \neq i}} m_1 \cdot m_2 \cdots m_{n-j-1} \cdot m_{n-j}}{\prod\limits_{\substack{0\leq m \leq n \\ m \neq i}} (m - i)} \right] & 0 \leq j < n \\
+%         \frac{1}{\prod\limits_{\substack{0\leq m \leq n \\ m \neq i}} (i - m)} & j = n
+%     \end{dcases} \nonumber
+% \end{equation}
+
+
+% \clearpage
+% For the case $i=0$, we get:
+% \begin{align}
+%     c_i &= \sum_{j=0}^{n} n^{j+1}/(j+1) \begin{dcases}
+%         (-1)^{j} \left[ \frac{\sum\limits_{\substack{0\leq m_1 < \dots < m_{n-j} \leq n \\ m_1, \dots, m_{n-j} \neq i}} m_1 \cdot m_2 \cdots m_{n-j-1} \cdot m_{n-j}}{\prod\limits_{\substack{0\leq m \leq n \\ m \neq i}} (m - i)} \right] & 0 \leq j < n \\
+%         \frac{1}{\prod\limits_{\substack{0\leq m \leq n \\ m \neq i}} (i - m)} & j = n
+%     \end{dcases} \nonumber \\
+%         &= \sum_{j=0}^{n} n^{j+1}/(j+1) \begin{dcases}
+%         (-1)^{j} \left[ \frac{\sum\limits_{1\leq m_1 < \dots < m_{n-j} \leq n} m_1 \cdot m_2 \cdots m_{n-j-1} \cdot m_{n-j}}{\prod\limits_{\substack{1\leq m \leq n}} m} \right] & 0 \leq j < n \\
+%         \frac{1}{\prod\limits_{1\leq m \leq n} (- m)} & j = n
+%     \end{dcases} \nonumber \\
+%         &= \frac{1}{n!} \sum_{j=0}^{n} n^{j+1}/(j+1) \begin{dcases}
+%         (-1)^{j} \left[ \sum\limits_{1\leq m_1 < \dots < m_{n-j} \leq n} m_1 \cdot m_2 \cdots m_{n-j-1} \cdot m_{n-j} \right] & 0 \leq j < n \\
+%         (-1)^n & j = n
+%     \end{dcases} \nonumber \\
+%         &= \frac{1}{n!} \sum_{j=0}^{n} n^{j+1}/(j+1) \begin{dcases}
+%         (-1)^{j} \left[ (-1)^{j+1} s(n, j) \right] & 0 \leq j < n \\
+%         (-1)^n & j = n
+%     \end{dcases} \nonumber \\
+%         &= \frac{1}{(n-1)!} \sum_{j=0}^{n} n^{j}/(j+1) \begin{dcases}
+%         (-1)^{j} \left[ (-1)^{j+1} s(n, j) \right] & 0 \leq j < n \\
+%         (-1)^n & j = n
+%     \end{dcases} \nonumber \\
+%         &= \frac{1}{(n-1)!} \sum_{j=0}^{n} n^{j}/(j+1) \begin{dcases}
+%         s(n, j) & 0 \leq j < n \\
+%         (-1)^n & j = n
+%     \end{dcases} \nonumber
+% \end{align}
+
+% \textsc{THIS PROOF HAS NOT BEEN COMPLETED YET}
+% \end{proof}
+
+

@@ -1,0 +1,19 @@
+\chapter*{Abstract}
+\setheader{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+The goal of seismic imaging is to create a model of the subsurface from samples of a transmitted wavefield that is reflected in soil layers.
+The created model can be used to locate storage possibilities for CO$_2$ or H$_2$ or to find oil and gas reservoirs or other natural resources.
+Seismic imaging relies on the propagation of wavefields, which can be computed by evaluating the Rayleigh integral, a process that often requires a lot of time and resources.
+In this thesis we develop methods to reduce error in the computation of the Rayleigh integral whilst remaining time-efficient.
+To achieve this we first give the derivation of the Rayleigh integral and provide a few methods to evaluate integrals numerically using interpolating polynomials.
+Afterwards, we adapt the integration methods to the Rayleigh integral and arrive at the main algorithms for its evaluation, at the end we compare these algorithms.
+
+We present the method that is currently used for the computation of the Rayleigh integral and a modification that extends the method to samples on a rectilinear grid.
+The adjusted version of this method did not perform consistently in our results, although it achieved better results than the original method on average.
+Secondly we present a combined interpolation method (that is, it interpolates the full integrand without taking advantage that one of the two functions in the integrand is known) named Simpson's rule, which only performed better in the high sample points per wavelength range with minimal noise.
+An alteration to the method for semi-equidistant grids (see Section \ref{doub_alter} for the definition) also did not perform consistently and is not worth the extra operations.
+Next was the separate interpolation algorithm (this time taking advantage of the known part of the integrand), this method is difficult to implement and had only slightly better performance than the combined method.
+The final method was an extension of the separate interpolation algorithm to non-equidistant grids, this method performed undoubtedly the best of all presented methods (often better by a factor of 15 compared to the currently used method), this method is therefore recommended for evaluating the Rayleigh integral.
+The amount of operations needed for all presented methods is approximately the same and the execution time needed for the calculation depends on the implementation of the problem.
+
+In conclusion, we found that the separate interpolation method for non-equidistant grids delivered the most accurate approximations of the Rayleigh integral. This method can be used in seismic imaging to increase the accuracy of models of the subsurface.

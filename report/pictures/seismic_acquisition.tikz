@@ -1,0 +1,95 @@
+\definecolor{layer1color}{RGB}{243,206,147}
+\definecolor{layer2color}{RGB}{148,115,82}
+\definecolor{layer3color}{RGB}{112,79,56}
+
+
+\begin{tikzpicture}[axis/.style={->,blue,thick},
+                    vector/.style={-stealth,black,very thick}]
+
+    \footnotesize
+
+    \newcommand{\pathA}{(0,0) .. controls (5,0) .. (10,0)};
+    \newcommand{\pathB}{(0,-2.5) .. controls (4,-3) and (6,-2) .. (10,-2.5)};
+    \newcommand{\pathC}{(0,-4) .. controls (3,-2) and (7,-5) .. (10,-3.5)};
+    \newcommand{\pathD}{(0,-6) .. controls (3,-5) and (7,-4) .. (10,-6)};
+    \newcommand{\pathE}{(3,-7) .. controls (3,-5.5) and (4,-4.5) .. (7,-7)};
+    \newcommand{\pathF}{(0,-7) .. controls (5,-7) .. (10,-7)};
+
+    \begin{scope}
+        \clip \pathA -- (10,-7) -- (0,-7) -- cycle;
+        \fill[tudelft-cyan!50] \pathB -- (10,0) -- (0,0) -- cycle;
+    \end{scope}
+    \begin{scope}
+        \clip \pathB -- (10,-7) -- (0,-7) -- cycle;
+        \fill[layer1color!80] \pathC -- (10,0) -- (0,0) -- cycle;
+    \end{scope}
+    \begin{scope}
+        \clip \pathC -- (10,-7) -- (0,-7) -- cycle;
+        \fill[layer2color!80] \pathD -- (10,0) -- (0,0) -- cycle;
+    \end{scope}
+    \begin{scope}
+        \clip \pathD -- (10,-7) -- (0,-7) -- cycle;
+        \fill[layer3color!80] \pathF -- (10,0) -- (0,0) -- cycle;
+    \end{scope}
+    \begin{scope}
+        \clip \pathE -- (10,-7) -- (0,-7) -- cycle;
+        \fill[gray!80] \pathF -- (10,0) -- (0,0) -- cycle;
+    \end{scope}
+
+    % \draw \pathA;
+    \draw \pathB;
+    \draw \pathC;
+    \draw \pathD;
+    \draw \pathE;
+    % \draw \pathF;
+
+
+    \node at (4.4,-6.2) (A) {CO$_2$};
+    \node at (4.4,-6.55) (B) {Storage};
+    \node[draw,dashed,fit=(A) (B),inner sep=0pt] {};
+
+    \node[draw,dashed] at (1,.5) {Source};
+    \node[draw,dashed] at (6.5,.5) {Receivers};
+
+    \node at (1,0) {\textbullet};
+    \node at (4,0) {$\bigtriangledown$};
+    \node at (5,0) {$\bigtriangledown$};
+    \node at (6,0) {$\bigtriangledown$};
+    \node at (7,0) {$\bigtriangledown$};
+    \node at (8,0) {$\bigtriangledown$};
+    \node at (9,0) {$\bigtriangledown$};
+
+
+    \draw[draw=none,fill=none,postaction=decorate, decoration={markings,
+                    mark= at position 1.5cm with {
+                        \node[transform shape,inner sep=1pt] (mark-1) {};
+                    }}]\pathE;
+    \draw[thick, black, postaction=decorate,
+        decoration={markings, mark=between positions 0.2 and 0.9 step 0.5 with{\arrow{latex}}}]
+    (1,0) -- (mark-1.center) -- (7,0);
+
+    \draw[draw=none,fill=none,postaction=decorate, decoration={markings,
+                    mark= at position 4cm with {
+                        \node[transform shape,inner sep=1pt] (mark-2) {};
+                    }}]\pathD;
+    \draw[thick, postaction=decorate,
+        decoration={markings, mark=between positions 0.2 and 0.9 step 0.5 with{\arrow{latex}}}]
+    (1,0) -- (mark-2.center) -- (8,0);
+
+
+    \draw[draw=none,fill=none,postaction=decorate,
+                decoration={markings, mark= at position 1.5cm with {
+                        \node[transform shape,inner sep=1pt] (mark-3) {};
+                    }}]\pathD;
+    \draw[draw=none,fill=none,postaction=decorate,
+                decoration={markings, mark= at position 1.9cm with {
+                        \node[transform shape,inner sep=1pt] (mark-4) {};
+                    }}]\pathC;
+    \draw[draw=none,fill=none,postaction=decorate, decoration={markings,
+                    mark= at position 2.5cm with {
+                        \node[transform shape,inner sep=1pt] (mark-5) {};
+                    }}]\pathD;
+    \draw[thick, postaction=decorate,
+        decoration={markings, mark=between positions 0.25 and 0.9 step 0.5 with{\arrow{latex}}}]
+    (1,0) -- (mark-3.center) -- (mark-4.center) -- (mark-5.center) -- (4,0);
+\end{tikzpicture}

@@ -1,0 +1,260 @@
+\chapter{Adapting numerical integration methods for the Rayleigh integral}
+\label{chap4}
+In this chapter we adapt the numerical methods from Chapter \ref{chap3} to better fit the Rayleigh integral (equation \ref{eq:rayleigh}).
+The methods we develop will be compared in Chapter \ref{chap5}, the results of this thesis.
+
+The first section will generalize both methods derived in the previous chapter (Section \ref{sep_interpol} for separate interpolation and Section \ref{comb_interpol} for combined interpolation) to complex, double integrals.
+In the next section we present a variation to the combined interpolation method (Section \ref{comb_interpol}), in specific Simpson's rule, to evaluate integrals on non-equidistant intervals (single integrals) and semi-equidistant grids (double integrals), weakening the assumption made in Chapter \ref{chap3} of an equidistant grid.
+In the last section we summarize all the derived methods and their qualities for the next chapter, where we present the results of evaluating an artificial Rayleigh integral using those methods.
+
+\section{From single to double integrals}
+The Rayleigh integral is not a real-valued, single integral. It is a complex valued, double integral.
+Therefore, in this section, we present methods that extend the algorithms from Sections \ref{sep_interpol} and \ref{comb_interpol} to complex-valued, double integrals.
+Using these new methods we can approximate the Rayleigh integral in three dimensions, giving us the ability to propagate a wavefield from one layer of soil to the next.
+
+\subsection{Separate interpolation}
+\label{sep_interpol_3d}
+This argument is very similar to the one in Section \ref{sep_interpol}.
+However, since this is a key element of the implementation of this thesis we will write it out.
+This extension does not include the complex-valued integral.
+We note that to calculate it one could use the method described below for the real-real values of $f$ and $g$, the imaginary-real, the real-imaginary and the imaginary-imaginary (as a consequence the initialization of the algorithm only takes twice as long whereas the evaluation takes 4 times as long), after combining the results one finds the integral.
+
+The interval $[x_L,x_R]\times [y_L, y_R]$ is partitioned into $\ell_x \cdot \ell_y$ equally large subintervals
+\begin{equation}
+    \begin{matrix}
+    % \begin{array}{ccrc}
+        [x_0, x_1]\times[y_0, y_1] & [x_0, x_1]\times[y_1, y_2] & \cdots & [x_0, x_1]\times[y_{\ell_y-1}, y_{\ell_y}] \\
+        [x_1, x_2]\times[y_0, y_1] & [x_1, x_2]\times[y_1, y_2] & \cdots & [x_1, x_2]\times[y_{\ell_y-1}, y_{\ell_y}] \\
+        \vdots & \vdots & \ddots & \vdots \\
+        [x_{\ell_x-1}, x_{\ell_x}]\times[y_0, y_1] & [x_{\ell_x-1}, x_{\ell_x}]\times[y_1, y_2] & \cdots &  [x_{\ell_x-1}, x_{\ell_x}]\times [y_{\ell_y-1}, y_{\ell_y}]
+    % \end{array}
+    \end{matrix}\,,
+    \nonumber
+\end{equation}
+that is, $x_1 - x_0 =\cdots = x_{\ell_x} - x_{\ell_x-1}$, $x_L = x_0$, and $x_R = x_{\ell_x}$ and $y_1 - y_0 = \cdots = y_{\ell_y} - y_{\ell_y-1}$, $y_L = y_0$, and $y_R = y_{\ell_y}$.
+
+For each interval $[x_{i_x}, x_{i_x+1}]\times[y_{i_y}, y_{i_y+1}]$ with $0 \leq i_x \leq \ell_x -1$ and $0 \leq i_y \leq \ell_y -1$ both functions are interpolated by polynomials \cite{2dpol_inter}:
+\begin{equation}
+    f_{i_x, i_y}(x, y) = \sum_{j_x=0}^{n_f}\sum_{j_y=0}^{m_f} b_{i_xi_yj_xj_y} x^{j_x}y^{j_y} \,,  \quad
+    g_{i_x, i_y}(x, y) = \sum_{k_x=0}^{n_g}\sum_{k_y=0}^{m_g} c_{i_xi_yk_xk_y} x^{k_x}y^{k_y} \,. \nonumber
+\end{equation}
+Using the fact that the intervals are equidistant the interpolation can be achieved with a time complexity of $\mathcal O(n_f^2m_f^2 \ell_x \ell_y + n_g^2m_g^2 \ell_x \ell_y)$, we also need $\mathcal O(n_fm_f\ell_x\ell_y + n_gm_g\ell_x\ell_y)$ space.
+
+We assume the prediction points (the points corresponding to different values of $a_x$, $a_y$) are spaced in an equidistant grid (this is often the case).
+We write $a_x = m_x (x_1 - x_0)$ and $a_y = m_y(y_1-y_0)$ with $m_x\in \mathbb N$, $m_y \in \mathbb N$, $0\leq m_x \leq s_x$ and $0\leq m_y \leq s_y$, where $s_x$ denotes the number of prediction points in the $x$-direction and $s_y$ those in the $y$-direction, such that the integral becomes (we make the same assumption that $f(x,y)=g(x,y)=0$ for $(x,y) \notin [x_L, x_R]\times[y_L,y_R]$):
+\begin{align}
+    \int_{y_L}^{y_R} \int_{x_L}^{x_R} &f(x', y') g(x'+a_x, y'+a_y) \mathrm d x'\mathrm d y' \nonumber \\
+    &= \int_{y_L-a_y}^{y_R-a_y} \int_{x_L-a_x}^{x_R-a_x} f(x-a_x, y-a_y) g(x, y) \mathrm d x\mathrm d y \nonumber \\
+                                                &\approx \sum_{i_x=0}^{\ell_x-m_x}\sum_{i_y=0}^{\ell_y-m_y} \int_{y_{i_y}}^{y_{i_y+1}} \int_{x_{i_x}}^{x_{i_x+1}} f_{i_x, i_y}(x-a_x, y-a_y) g_{i_x, i_y}(x, y) \mathrm d x \mathrm d y \nonumber \\
+                                                &= \sum_{i_x=0}^{\ell_x-m_x}\sum_{i_y=0}^{\ell_y-m_y} \int_{y_{i_y}}^{y_{i_y+1}} \int_{x_{i_x}}^{x_{i_x+1}} f_{i_x+m_x, i_y+m_y}(x) g_{i_x, i_y}(x) \mathrm d x \nonumber \\
+                                                &= \sum_{i_x=0}^{\ell_x-m_x}\sum_{i_y=0}^{\ell_y-m_y} \int_{y_{i_y}}^{y_{i_y+1}} \int_{x_{i_x}}^{x_{i_y+1}} \sum_{j_x=0}^{n_f}\sum_{j_y=0}^{m_f}\sum_{k_x=0}^{n_g}\sum_{k_y=0}^{m_g} b_{i_x+m_x,i_y+m_y,j_x,j_y} c_{i_xi_yk_xk_y} x^{j_x+k_x}y^{j_y+k_y} \mathrm d x \mathrm d y \nonumber \\
+                                                &= \sum_{i_x=0}^{\ell_x-m_x}\sum_{i_y=0}^{\ell_y-m_y} \sum_{j_x=0}^{n_f}\sum_{j_y=0}^{m_f}\sum_{k_x=0}^{n_g}\sum_{k_y=0}^{m_g} b_{i_x+m_x,i_y+m_y,j_x,j_y} c_{i_xi_yk_xk_y}  \int_{y_{i_y}}^{y_{i_y+1}} \int_{x_{i_x}}^{x_{i_x+1}}  x^{j_x+k_x}y^{j_y+k_y} \mathrm d x \mathrm d y \nonumber \\
+                                                &= \sum_{i_x=0}^{\ell_x-m_x}\sum_{i_y=0}^{\ell_y-m_y} \sum_{j_x=0}^{n_f}\sum_{j_y=0}^{m_f} b_{i_x+m_x,i_y+m_y,j_x,j_y} \sum_{k_x=0}^{n_g}\sum_{k_y=0}^{m_g} c_{i_xi_yk_xk_y} \frac{x_{i_x+1}^{j_x+k_x+1} - x_{i_x}^{j_x+k_x+1}}{j_x+k_x+1}  \frac{y_{i_y+1}^{j_y+k_y+1} - y_{i_y}^{j_y+k_y+1}}{j_y+k_y+1} \,.\nonumber
+\end{align}
+Storing the values of
+\begin{equation}
+    d_{i_xi_yj_xj_y} = \sum_{k_x=0}^{n_g}\sum_{k_y=0}^{m_g} c_{i_xi_yk_xk_y} \frac{x_{i_x+1}^{j_x+k_x+1} - x_{i_x}^{j_x+k_x+1}}{j_x+k_x+1}  \frac{y_{i_y+1}^{j_y+k_y+1} - y_{i_y}^{j_y+k_y+1}}{j_y+k_y+1} \,, \nonumber
+\end{equation}
+for all $i_x,i_y$ and $j_x,j_y$, then allows us to rewrite the equation, giving:
+\begin{equation}
+    \int_{y_L}^{y_R}\int_{x_L}^{x_R} f(x,y) g(x+a_x,y+a_y) \mathrm d x \mathrm dy \approx \sum_{i_x=0}^{\ell_x-m_x}\sum_{i_y=0}^{\ell_y-m_y} \sum_{j_x=0}^{n_f}\sum_{j_y=0}^{m_f} b_{i_x+m_x,i_y+m_y,j_x,j_y} d_{i_xi_yj_xj_y} \,.\nonumber
+\end{equation}
+% The process of storing the values of $d_{i_x,i_y,j_x,j_y}$ has a space and time complexity of $\mathcal O(n_fm_f\ell_x + n_gm_g\ell_y)$. After which computing the sum for all values of $i_x,i_y$ and $j_x,j_y$ takes $\mathcal O(n_f n_g m_f m_g \ell_x \ell_y)$ time and $\mathcal O(n_f m_f \ell_x \ell_y)$ space.
+
+The final space and time complexity are given by the initialization, which uses $\mathcal O((n_f+n_g)^2(m_f+m_g)^2 \ell_x \ell_y)$ time and $\mathcal O(n_fm_f\ell_x \ell_y + n_gm_g\ell_x \ell_y)$ space and by the computation, using $\mathcal O(n_f m_f \ell_x \ell_y s_x s_y)$ time and $\mathcal O(n_f m_f \ell_x \ell_y + n_g m_g \ell_x \ell_y + s_x s_y)$ space.
+
+Note that the final time complexity is again independent of $n_g$ and $m_g$.
+
+
+\subsection{Combined interpolation}
+\label{comb_interpol_3d}
+In this section we extend the combined interpolation method from Section \ref{comb_interpol} (the majority of the used notation is adapted from this section as well) to complex-valued double integrals.
+Luckily, the Newton-Cotes equations are easier to extend.
+
+For the $2$nd-order Newton-Cotes equation we can write
+\begin{equation}
+    C = \frac{h_x h_y}{9}
+    \begin{bmatrix}
+        1&4&2&4&\cdots & 2&4&1 \\
+        4&16&8&16&\cdots & 8&16&4 \\
+        2&8&4&8&\cdots & 4&8&2 \\
+        4&16&8&16&\cdots & 8&16&4 \\
+        \vdots&\vdots&\vdots&\vdots&\ddots&\vdots&\vdots&\vdots\\
+        2&8&4&8&\cdots & 4&8&2 \\
+        4&16&8&16&\cdots & 8&16&4 \\
+        1&4&2&4&\cdots & 2&4&1 \\
+    \end{bmatrix} \,,\nonumber
+\end{equation}
+which is the same as
+\begin{equation}
+    C = \mathbf c_x^\top \mathbf c_y \,. \nonumber
+\end{equation}
+% And if we have a matrix $F$ with $F_{ij} = f(x_i, y_j)$ we can approximate the integral by:
+% \begin{equation}
+%     \int_{x_L}^{x_R} \int_{y_L}^{y_R} f(x, y) \mathrm d x \mathrm d y \approx C \odot F \nonumber
+% \end{equation}
+% Where $\odot$ denotes the Hadamard product of matrices, that is $(A\odot B)_{ij} = (A)_{ij}(B)_{ij}$.
+If we let the matrix $F$ be the matrix of function values, i.e. $F_{ij} = f(x_i, y_j)$ for all $i$, $j$, we can approximate a complex-valued, double integral by
+\begin{equation}
+    \int_{x_L}^{x_R} \int_{y_L}^{y_R} f(x, y) \mathrm d x \mathrm d y \approx \langle C, F \rangle_{\mathrm F} = \mathbf c_x F \mathbf c_y^\top \,.\nonumber
+\end{equation}
+Note that $\langle A, B \rangle_{\mathrm F}$ denotes the Frobenius inner product of $A$ and $B$, i.e. the sum over the elements of the pointwise (or Hadamard) product of both matrices.
+
+\section{Uncertainty in gridpoints}
+In all previous described methods we have made an assumption: the gridpoints are spaced equidistantly.
+This assumption speeds up the calculation, but it is still only approximately true; if we measure the pressure wavefield on certain gridpoints we will never space the sensors \textit{exactly} the same distance apart each time.
+However, in general the corrections to the gridpoints are often known.
+In this section we thus present a revision to Simpson's rule to interpolate the data.
+The first subsection (Subsection \ref{sing_alter}) does this for single integrals with non-equidistant intervals.
+The second subsection (Subsection \ref{doub_alter}) does this for double integrals with semi-equidistant gridpoints (in the section we also define semi-equidistant).
+We note that these adjustments are also possible for higher-order Newton-Cotes equations, but these will not be derived and are left to future research (Section \ref{discussion}).
+
+
+\subsection{Single integral alterations}
+\label{sing_alter}
+Like in our previous derivation of Simpson's rule in Section \ref{derivation_simpson}, we start by interpolating just 3 points.
+The modification is that we now interpolate the points $x_0$, $x_1+\delta$ and $x_2$ in order to account for non-equidistant intervals.
+The corresponding function values are $f_0$, $f_1$ and $f_2$, respectively.
+The interpolating polynomial can be derived from the top row of:
+\begin{equation}
+    \begin{matrix}
+        x_0 & f_0 \\
+            & & \frac{f_1-f_0}{h+\delta} \\
+        x_1+\delta & f_1 & & \frac{h(f_2+f_0-2f_1)+\delta(f_2-f_0)}{2h(h^2-\delta^2)} \\
+            & & \frac{f_2-f_1}{h-\delta} \\
+        x_2 & f_2 & & \\
+    \end{matrix} \,, \nonumber
+\end{equation}
+where the fraction on the right can be seen to hold from observing that
+\begin{align}
+    \frac{\frac{f_2-f_1}{h-\delta}-\frac{f_1-f_0}{h+\delta}}{2h} &= \frac{\frac{f_2-f_1}{h-\delta}+\frac{f_0-f_1}{h+\delta}}{2h} \nonumber\\
+                                                                 &= \frac{\frac{(h+\delta)(f_2-f_1)+(h-\delta)(f_0-f_1)}{(h-\delta)(h+\delta)}}{2h} \nonumber\\
+                                                                 &= \frac{(h+\delta)(f_2-f_1)+(h-\delta)(f_0-f_1)}{2h(h^2-\delta^2)} \nonumber\\
+                                                                 &= \frac{h(f_2+f_0-2f_1)+\delta(f_2-f_0)}{2h(h^2-\delta^2)} \,. \nonumber
+\end{align}
+The interpolating polynomial thus becomes
+\begin{equation}
+    p(x) = f_0 + \frac{f_1-f_0}{h+\delta} (x-x_0) + \frac{h(f_2+f_0-2f_1)+\delta(f_2-f_0)}{2h(h^2-\delta^2)} (x-x_0)(x-x_1) \,.\nonumber
+\end{equation}
+Again, integrating from $x_0$ to $x_2$ whilst keeping in mind that $x_1-x_0 = h+\delta$ and $x_2-x_0 = 2h$ now gives us our desired result:
+\begin{align}
+    \int_{x_0}^{x_2} &p(x) \mathrm dx \nonumber \\
+    &= \left[f_0 x + \frac{f_1-f_0}{2(h+\delta)} (x-x_0)^2 + \frac{h(f_2+f_0-2f_1)+\delta(f_2-f_0)}{2h(h^2-\delta^2)} \left(\frac{x^3}{3}-(x_0+x_1)\frac{x^2}{2} + x_0 x_1 x\right)\right]_{x_0}^{x_2} \nonumber \\
+                                     &= 2hf_0 + \frac{f_1-f_0}{2(h+\delta)} (2h)^2 + \frac{h(f_2+f_0-2f_1)+\delta(f_2-f_0)}{2h(h^2-\delta^2)} \left(\frac{x_2^3-x_0^3}{3}-(x_0+x_1)\frac{x_2^2-x_0^2}{2} + 2h x_0 x_1 \right) \nonumber \\
+                                     &\begin{aligned}= \frac{2h(h^2-\delta^2)f_0}{h^2-\delta^2} & + \frac{2h^2(h-\delta)(f_1-f_0)}{h^2-\delta^2} \\
+                                         & + \frac{h(f_2+f_0-2f_1)+\delta(f_2-f_0)}{2h(h^2-\delta^2)} \left(\frac{2h^3}{3}+4x_0^2h+2x_0h^2-2hx_0(2x_0+h)-2\delta h^2  \right)
+                                     \end{aligned} \nonumber \\
+                                     &= \frac{2h(h^2-\delta^2)f_0}{h^2-\delta^2} + \frac{2h^2(h-\delta)(f_1-f_0)}{h^2-\delta^2} + \frac{h(f_2+f_0-2f_1)+\delta(f_2-f_0)}{2h(h^2-\delta^2)} \left(\frac{2h^3}{3}-2\delta h^2\right) \nonumber \\
+                                     &= \frac{6h(h^2-\delta^2)f_0 + 6h^2(h-\delta)(f_1-f_0) + \{h(f_2+f_0-2f_1)+\delta(f_2-f_0)\} (h^2-3\delta h)}{3(h^2-\delta^2)} \nonumber \\
+                                     &\begin{aligned}=\frac{\delta^2 h \{-6f_0 - 3(f_2-f_0)\}}{3(h^2-\delta^2)} + \frac{\delta h^2 \{ -6(f_1-f_0) - 3 (f_2+f_0-2f_1) + (f_2-f_0) \}}{3(h^2-\delta^2)} \\
+                                          + \frac{h^3 \{6f_0 + 6(f_1-f_0) + (f_2+f_0-2f_1) \}}{3(h^2-\delta^2)}
+                                     \end{aligned} \nonumber \\
+                                     &=\frac{\delta^2 h \{-3(f_0+f_2)\}}{3(h^2-\delta^2)} + \frac{\delta h^2 \{ (2f_0-2f_2) \}}{3(h^2-\delta^2)}  + \frac{h^3 \{f_0 + 4f_1 + f_2 \}}{3(h^2-\delta^2)} \nonumber \\
+                                     &=\frac{h(-3\delta^2(f_0+f_2) + 2\delta (f_0-f_2)h + h^2 (f_0+4f_1+f_2))}{3 (h^2-\delta^2)} \,. \label{eq:delta_simpson}
+\end{align}
+This results in Simpson's rule for a single integral on a non-equidistant interval (consisting of 3 points). We note that filling in $\delta = 0$ gives the regular Simpson's rule derived in Section \ref{derivation_simpson}.
+
+This method can be extended to approximate integrals similarly to Section \ref{newton_cotes_integrals}, whilst only noting that this time all $h$ and all $\delta$ are dependent on the $x$ coordinate, so they can not be placed in front of the vector.
+Because for full integrals we cannot fuse Simpson's rule on different intervals, this method requires more operations than before (a factor $\frac{3}{2}$ more).
+
+
+\subsection{Double integral alterations}
+\label{doub_alter}
+\begin{wrapfigure}{r}{.5\textwidth}
+    \vspace{-1em}
+    \includegraphics[width=.5\textwidth]{pictures/function_lattice}
+    \vspace{-1.5em}
+    \caption{A semi-equidistant grid, we note that in this case $\delta_{y0}$ and $\delta_{x1}$ are both negative.}
+    \label{fig:semiequidistant}
+    \vspace{-1em}
+\end{wrapfigure}
+We now derive similar modifications to the method for evaluating double integrals.
+First we define semi-equidistant gridpoints.
+Note that this method will yield the exact result for 2nd-order polynomials in two dimensions if the sample points are semi-equidistant.
+To define semi-equidistant gridpoints we refer to Figure \ref{fig:semiequidistant}.
+The restrictions compared to a non-equidistant grid are that $f_{00}$, $f_{20}$, $f_{22}$ and $f_{02}$ are forced to lie on a rectangular grid and $f_{01}$, $f_{11}$ and $f_{21}$ are restricted to the same height (which is shifted $\delta_y$ from the middle of the rectangle).
+Also, $f_{10}$ and $f_{12}$ are restricted to lie on the rectangle, although the former can have a shift $\delta_{x0}$ in the $x$-direction and the latter can have a shift of $\delta_{x2}$ in the $x$-direction.
+The middle point $f_{11}$ can also have a shift of $\delta_{x1}$ in the $x$-direction.
+We note that this grid has a ``preferred'' direction; the most uncertainty in the gridpoints can be in the $x$-direction, therefore we advise orienting the axis so that the direction with the most uncertainty is oriented in the $x$-direction.
+
+Now, to derive the adjustment for double integrals on semi-equidistant grids we first interpolate the function.
+We do this in two steps, first in the $x$-direction whilst fixing $y$ and afterwards in the $y$-direction for all values of $x$.
+We denote $f_{ij} = f(x_i, y_j)$ as the function value at the point $(x_i, y_j)$ (for clarity we omit $\delta$ in this notation) for all $i$, $j$ and $f_{xi} = f(x, y_i)$ as the function values whilst fixing $y_i$ for all $i$ and list the interpolating polynomials:
+\begin{gather}
+    f(x, y_0) = f_{x0} = f_{00} + \frac{f_{10}-f_{00}}{h_{x}+\delta_{x0}} (x-x_0) + \frac{h_{x}(f_{20}+f_{00}-2f_{10})+\delta_{x0}(f_{20}-f_{00})}{2h_{x}(h_{x}^2-\delta_{x0}^2)} (x-x_0)(x-x_1) \,,\nonumber \\
+    f(x, y_1) = f_{x1} = f_{01} + \frac{f_{11}-f_{01}}{h_{x}+\delta_{x1}} (x-x_0) + \frac{h_{x}(f_{21}+f_{01}-2f_{11})+\delta_{x1}(f_{21}-f_{01})}{2h_{x}(h_{x}^2-\delta_{x1}^2)} (x-x_0)(x-x_1) \,,\nonumber \\
+    f(x, y_2) = f_{x2} = f_{02} + \frac{f_{12}-f_{02}}{h_{x}+\delta_{x2}} (x-x_0) + \frac{h_{x}(f_{22}+f_{02}-2f_{12})+\delta_{x2}(f_{22}-f_{02})}{2h_{x}(h_{x}^2-\delta_{x2}^2)} (x-x_0)(x-x_1) \,.\nonumber
+\end{gather}
+The final interpolating polynomial can now be written as (note that we essentially interpolate $f(x, y_0)$, $f(x, y_1)$, and $f(x, y_2)$ for all values of $x$ with known function values at $y_0$, $y_1+\delta_y$, and $y_2$, resulting in interpolation similar to a single integral)
+\begin{equation}
+    f(x, y) = f_{x0} + \frac{f_{x1}-f_{x0}}{h_y+\delta_y} (y-y_0) + \frac{h_y(f_{x2}+f_{x0}-2f_{x1})+\delta_y(f_{x2}-f_{x0})}{2h_y(h_y^2-\delta_y^2)} (y-y_0)(y-y_1) \,.\nonumber
+\end{equation}
+
+After defining
+\begin{align}
+    a_i &:=\int_{x_0}^{x_2} f(x, y_i) \mathrm dx = \int_{x_0}^{x_2} f_{xi} \mathrm d x \nonumber \\
+    &= \frac{h_{x}(-3\delta_{xi}^2(f_{0i}+f_{2i}) + 2\delta_{xi}(f_{0i}-f_{2i})h_{x} + h_{x}^2 (f_{0i}+4f_{1i}+f_{2i}))}{3 (h_{x}^2-\delta_{xi}^2)} \,, \nonumber
+\end{align}
+the final integral becomes (the second step can be seen from equation \ref{eq:delta_simpson})
+\begin{align}
+    &\int_{x_0}^{x_2} \int_{y_0}^{y_2} f(x, y) \mathrm d y \mathrm dx \nonumber \\
+    &= \int_{x_0}^{x_2} \frac{h_y(-3\delta_y^2(f_{x0}+f_{x2}) + 2\delta_y(f_{x0}-f_{x2})h_y + h_y^2 (f_{x0}+4f_{x1}+f_{x2}))}{3 (h_y^2-\delta_y^2)} \mathrm dx \nonumber \\
+    &= \frac{h_y(-3\delta_y^2(a_0+a_2) + 2\delta_y(a_0-a_2)h_y + h_y^2 (a_0+4a_1+a_2))}{3 (h_y^2-\delta_y^2)} \,.\nonumber
+\end{align}
+We note that the rectangle in Figure \ref{fig:semiequidistant} only encloses the area of $4$ full circles, that is, in the case where we can connect Simpson's rule in an infinite grid, we only need $4$ operations per grid to approximate the integral.
+Since we cannot join the grids any longer we now require (at least) $9$ operations per grid to approximate the integral.
+
+\section{Summary of used methods}
+\label{summary_used_method}
+In this section we recapitulate all derived methods, in the next chapter we then use those methods to evaluate an artificial Rayleigh integral.
+
+The implementation of these methods is in Appendix \ref{app:code}, for the implementation we made use of \href{https://www.python.org/downloads/release/python-3100/}{Python3.10}.
+Specifically the packages \href{https://matplotlib.org/}{matplotlib} (visualizing), \href{https://numpy.org/}{NumPy} (mathematical computation) and \href{https://scipy.org/}{SciPy} (interpolating functions) were used.
+
+For notation we use $s_x$ to denote the number of prediction points in the $x$-direction and likewise we define $s_y$ to denote the number of prediction points in the $y$-direction.
+We consider approximating the Rayleigh integral on $\ell_x \ell_y$ sample points.
+
+\subsubsection{Basic method}
+The current method to evaluate the Rayleigh integral is a combined interpolation method where the trapezoidal rule is used and uncertainty in gridpoints is ignored.
+Also, the time complexity of this method is $\mathcal O(\ell_x\ell_y s_x s_y)$, whereas the space complexity is $\mathcal O(s_x s_y)$.
+Complex integrals will require twice as many operations since we need to do this for the real part and the imaginary part separately (if we do not so explicitly the computer will do this internally resulting in the same factor).
+
+\subsubsection{Altered basic method}
+Although this variation was not previously discussed it is quite simple.
+In this alteration we weaken the assumption that the gridpoints are regularly spaced.
+Instead, we assume that the gridpoints are spaced in rectangles (see the outer points of Figure \ref{fig:semiequidistant}, this is often called rectilinear) where $h_x$ and $h_y$ can vary along the grid.
+
+This method is implemented by calculating $\mathbf c_x$, $\mathbf c_y$ (equation \ref{eq:vectors}) without the common factors $h_x$ or $h_y$ in front, as they can vary at different positions.
+Again, the time complexity of this method is $\mathcal O(\ell_x\ell_y s_x s_y)$ and the space complexity is $\mathcal O(s_x s_y)$.
+Also, for complex integrals the same argument holds and this will take twice as long.
+
+\subsubsection{Separate interpolation method}
+For this method we interpolate the pressure function by 2 dimensional cubic splines (i.e. $n_f=m_f=3$ in Section \ref{sep_interpol_3d}).
+In our implementation of this method (computer code in Appendix \ref{app:code}) we assume that the derivative of the Green's function is interpolated to such a high degree that it corresponds to the exact function\footnote{This is generally a good approximation to compute results, but it definitely does not correspond to a fast implementation in our case since integrals over subintervals are computed by dividing them into subsubintervals. Normally, taking $n_g=m_g=5$ or $n_g=m_g=6$ results in approximately the same answer with much faster computation.}.
+
+We differentiate two methods:
+\begin{itemize}
+    \item We assume that the pressure wavefield is measured on an equidistant grid and discard any uncertainty. The method is now completely described in Section \ref{sep_interpol_3d} with an initialization time complexity of $\mathcal O((n_f+n_g)^2(m_f+m_g)^2 \ell_x \ell_y)$ and an initialization space complexity of $\mathcal O(n_fm_f\ell_x \ell_y + n_gm_g\ell_x \ell_y)$.
+        The computation then takes $\mathcal O(n_f m_f \ell_x \ell_y s_x s_y)$ time and $\mathcal O(n_f m_f \ell_x \ell_y + n_g m_g \ell_x \ell_y + s_x s_y)$ space.
+        Also, for complex integrals the initialization will take twice as long and the computation will take 4 times as long.
+    \item We do not assume that the wavefield is sampled on an equidistant grid. First, we interpolate the non-equidistant grid by cubic splines (for this Clough-Tocher interpolation can be used), then, we determine the function values for an equidistant grid by evaluating the interpolated splines.
+        We then approximate the integral by the method described above.
+        Note that this method has to do the interpolation on a non-equidistant grid for the initialization phase.
+        Although the time complexity for the interpolation is the same for an equidistant grid the number of operations increase significantly \cite[\ttfamily{\textbf{scipy}/scipy/interpolate/interpnd.pyx}]{scipy}, therefore this method is only advisable for large numbers of $s_x$ and $s_y$, so initialization costs can be neglected.
+        The space complexity is the same as the other separate interpolation method because the first interpolation on a non-equidistant grid can be discarded when starting with the interpolation on an equidistant grid.
+\end{itemize}
+
+\subsubsection{Combined interpolation method}
+We use the method described in Subsection \ref{comb_interpol_3d} to approximate the Rayleigh integral.
+Due to large deflections at the boundaries we do not use higher-order Newton-Cotes equations to approximate the integral, this is instead left to future research in Section \ref{discussion}.
+Also, the time complexity of this algorithm is the same as the basic method (i.e. a time complexity of $\mathcal O(\ell_x\ell_y s_x s_y)$ and a space complexity of $\mathcal O(s_x s_y)$), since this method only uses different weighting factors in front of the function values.
+
+We assume that the grid is spaced equidistantly in this method.
+We do not use the method to first interpolate the data by splines after determining the function values on an equidistant grid as this supersedes the advantages of the method, it is fast and implementation is easy.
+Complex integrals can be evaluated in twice the time.
+
+\subsubsection{Altered combined interpolation method}
+This method is described in Subsection \ref{doub_alter}; the grid is now assumed to be spaced semi-equidistantly (see Figure \ref{fig:semiequidistant}) and other uncertainties are discarded.
+As discussed in Subsection \ref{doub_alter} we need at least $\frac{9}{4}$ times as many operations to approximate the integral since we cannot fuse adjacent grids (since we need to calculate fractions and use function values multiple times the extra amount of operations will be much larger in our implementation).
+The time and space complexity are, however, still the same as the combined interpolation method (i.e. a time complexity of $\mathcal O(\ell_x\ell_y s_x s_y)$ and a space complexity of $\mathcal O(s_x s_y)$).
+Complex integrals will take twice as long.

@@ -1,0 +1,135 @@
+\chapter{Introduction}
+Imagine you are walking down the beach, and you look at the horizon.
+An oil drilling platform crosses your sight, and you suddenly start to wonder;
+how do oil companies know where to drill? How do they know that the drilling platform must be placed at exactly that spot?
+The answer lies in using (marine) seismic imaging, a technique based on wavefield propagation, to produce an image of the subsurface.
+Using such images it is possible to find storage possibilities for CO$_2$ or H$_2$ or to locate reservoirs that contain oil and gas or other natural resources.
+
+\section{Problem description}
+\begin{wrapfigure}{r}{0.5\textwidth}
+    \vspace{-3.3em}
+    \centering
+    \includegraphics[width=0.5\textwidth]{pictures/seismic_acquisition}
+    \caption{Simplified version of marine seismic acquisition to find a potential storage space for CO$_2$. Different properties of soil layers are denoted by different shades of brown. Often the source and the receivers are towed by a survey ship moving with a constant speed to increase the amount of data, also, the source is usually located in the midst of the receivers.}
+    \label{fig:sea_floor}
+    \vspace{-0.8em}
+\end{wrapfigure}
+In Figure \ref{fig:sea_floor} we display a simplified version of marine seismic imaging.
+A source, typically an air gun at sea, transmits a wavefield close to the surface.
+A fraction of the transmitted wavefield propagates through the different layers of soil (in the figure this is displayed using arrows) and only a small part of the emitted wavefield is reflected in just the right way to be picked up by the receivers.
+Data processing then allows us to reconstruct a model of the subsurface by propagating the wavefield backwards, that is, from the collected data at the receivers we try to trace back the path that the waves took.
+Specifically, if we assume that the layers extend horizontally, the Rayleigh integral describes the propagation of a wavefield from one layer to the next.
+The assumption of horizontal layers is often an acceptable loss as methods without this assumption are overly complicated.
+In order to obtain knowledge of the different structural layers of the subsurface it is required to evaluate this integral multiple times for each layer (as waves can get reflected many times).
+
+This brings us to the problem: evaluating the Rayleigh integral takes a lot of time and requires a lot of computing power, as it needs to be done many times and the integral itself is difficult to compute.
+Also, because the wavefield is propagated numerous times through all the layers of the subsurface, a small mistake in the beginning can amplify errors at the end.
+This leads us to the main research question of this thesis:
+\begin{tcolorbox}[enhanced, size=fbox, shadow={2.1mm}{-2mm}{0mm}{gray!20!white}, boxrule={.5pt}, colback=white, boxsep=10pt, left=5pt, right=5pt, sharp corners]
+    \textsc{Research objective} \\
+    To find an algorithm that reduces error in the evaluation of the Rayleigh integral compared to existing and currently used methods whilst maintaining (or lowering) the time complexity.
+\end{tcolorbox}
+
+\section{Thesis outline}
+To achieve our objective and explain our results, this thesis contains the following chapters:
+\begin{itemize}
+    \item Chapter \ref{chap2}: \textsl{Deriving the Rayleigh integral}. This chapter contains the derivation of the Rayleigh integral. In order to derive the integral we must first derive the acoustical wave equation. This is done by combining relations from Hooke's law and Newton's law. Afterwards we transform the wave equation into the Helmholtz equation, which we then solve by using contour integration. From the solution we derive two main results: the wavefield of a point-source and the wavefield of a point-sink. A seeming paradox that there are multiple solutions to the same equation is explained further in Section \ref{solving_helmholtz}. Using our previous results we can then derive the Kirchhoff integral, the predecessor of the Rayleigh integral. By making an assumption and using a mathematical trick developed by Rayleigh we can then derive the Rayleigh integral. The integral describes the propagation from one layer of soil to the next, which is of vital importance for seismic imaging. In following chapters we seek to find methods that can approximate the integral numerically.
+    \item Chapter \ref{chap3}: \textsl{Numerical integration using interpolating polynomials}. In this chapter we propose two methods for approximating a simplified version of the Rayleigh integral. Both methods are based on interpolating the integrand by polynomials. The first method makes use of a known part of the integrand (the integrand is a product of two functions, one of which is known) and the second method does not. The first method is however more difficult to implement than the second method as it differs greatly from currently used methods. In the final section of this chapter we provide numerical examples that use both methods to approximate an integral. The corresponding computer code can be found in Appendix \ref{app:code}. Both methods lay the groundwork for other methods we derive in the next chapter. The focus of our thesis is to compare both methods (and all methods that originate from them) to the currently used method.
+    \item Chapter \ref{chap4}: \textsl{Adapting numerical integration methods for the Rayleigh integral}. In this chapter we get rid of the simplified version of the Rayleigh integral and translate the developed methods to fit the Rayleigh integral. An assumption made in the previous chapter, one that the receivers are placed exactly equidistant, is weakened. In the last section we provide a summary of all the derived methods. This is important because in the next chapter (Chapter \ref{chap5}) we compare the methods to the one currently used. We note that by using all the derived methods we can better approximate the Rayleigh integral, which can in turn be useful for seismic imaging, leading to lower error in models that can support drilling decisions.
+    \item Chapter \ref{chap5}: \textsl{Results}. This chapter contains the results of the derived methods applied to synthetically constructed data, similar to the actual Rayleigh integral. At the end of this chapter we give a comparison of the performance of the methods and compare them to the method that is currently used. Inconsistencies in the methods are also discussed by comparing averaged data to single data. This chapter provides the foundation for the conclusion (Chapter \ref{conclusion}) and lists the key results from this thesis.
+    \item Chapter \ref{conclusion}: \textsl{Conclusion and outlook}. In this chapter the main results of our thesis combined with a short introduction of the problem are given. At the end, we lay out subjects for future research, both theoretical and experimental.
+    \item Appendices: In \textsl{Appendix \ref{appendix:wave_eq}} we discuss a verification of the acoustic wave equation derived in Chapter \ref{chap2}, the verification is more intuitive than the one given and provides support for the correctness of the other derivation. In \textsl{Appendix \ref{app:proofs}} we provide proofs for various statements in Subsection \ref{sec:cotesian}. \textsl{Appendix \ref{app:B}} contains the matrices used in the numerical examples in Section \ref{examples}, whereas \textsl{Appendix \ref{app:code}} contains the computer code used to generate the examples. This appendix also contains the computer code for the results (Chapter \ref{chap5}).
+\end{itemize}
+
+\section{Preliminaries and notational conventions}
+In this section we provide the notational conventions that are used throughout this thesis.
+Also, we provide a few Fourier transformations (including the definition) that function as lemmas for further derivations.
+
+\subsection*{Notation}
+In general, vectors are three-dimensional and denoted by a \textbf{bold} letter, i.e. $\mathbf v = (v_x, v_y, v_z)^\top$ is a vector whereas $\omega$ is not.
+Also, we define $\mathbf r$ to be the position vector, thus $\mathbf r = (x, y, z)^\top = x\mathbf{\hat x} + y\mathbf {\hat y} + z\mathbf{\hat z}$ where $\mathbf{\hat x}$, $\mathbf{\hat y}$, and $\mathbf{\hat z}$ denote the unit vectors in the $x$, $y$, and $z$-directions, respectively.
+
+Using the same unit vectors we define the gradient of a scalar field $f$ as:
+\begin{equation}
+    \nabla f \coloneq \mathbf{\hat x} \frac{\partial f}{\partial x} + \mathbf{\hat y} \frac{\partial f}{\partial y} + \mathbf{\hat z} \frac{\partial f}{\partial z} \,. \nonumber
+\end{equation}
+Note that $(\partial/\partial x)$ is used to denote the derivative in the $x$-directions and similar notations are used for the $y$ and $z$-directions.
+The Laplacian of a scalar field $f$ is given as:
+\begin{equation}
+    \nabla^2 f \coloneq \mathbf{\hat x} \frac{\partial^2 f}{\partial x^2} + \mathbf{\hat y} \frac{\partial^2 f}{\partial y^2} + \mathbf{\hat z} \frac{\partial^2 f}{\partial z^2} \,. \nonumber
+\end{equation}
+For more information on the gradient or the Laplacian of a scalar field we refer the reader to \citeauthor{electrodynamics} \cite[Sections 1.2.3-1.2.7]{electrodynamics}.
+
+The Dirac delta function is defined by the following two equations:
+\begin{equation}
+    \delta(x) \coloneq \begin{cases} 0 & \textrm{if } x\neq 0\\ \infty & \textrm{if } x=0\end{cases} \,, \quad
+    \int_{-\infty}^\infty \delta(x) \mathrm d x = 1 \,. \nonumber
+\end{equation}
+In three dimensions this definition extends to
+\begin{equation}
+    \delta(\mathbf r) \coloneq \delta(x) \delta(y) \delta(z) \,. \nonumber
+\end{equation}
+Again, for more information the reader is referred to \citeauthor{electrodynamics} \cite[Sections 1.5.1-1.5.3]{electrodynamics}.
+
+We use big $\mathcal O$ notation (also known as Bachmann-Landau notation or asymptotic notation) to denote the time and space complexity of our algorithms.
+Below, we give the formal definition, for more information the reader is referred to \citeauthor{bigOnotation} \cite[Section 4.3]{bigOnotation}.
+\begin{tcolorbox}[sharp corners, colback=white]
+    Let both $f(n)$ and $g(n)$ be real valued functions. Then $f(n)$ is $\mathcal O(g(n))$ if there is a real constant $c>0$ and a real number $n_0$ such that:
+    \begin{equation}
+        f(n) \leq c \cdot g(n) \,, \quad \textrm{for} \quad n \geq n_0 \,. \nonumber
+    \end{equation}
+\end{tcolorbox}
+
+We note that notations that are not specified above are defined when they are used.
+
+\subsection*{Fourier transformations}
+In this subsection we provide a few Fourier transformations together with the definition, we note that the spatial variant and the temporal variant are both used in this thesis.
+In order to signify that we use a spatial Fourier transform we denote the spatial transformation with $\mathcal F \{ \dots \}(\mathbf q)$.
+The three-dimensional spatial Fourier transformation is defined as \cite[Section 3.4]{Fourier_transform}:
+\begin{equation}
+    \mathcal F\{u\}(\mathbf q) = \frac{1}{(2\pi)^3} \int_{-\infty}^{\infty} u(\mathbf r) e^{-i \mathbf q \cdot \mathbf r} \mathrm d^3 \mathbf r \,,\label{eq:fourier_trans}
+\end{equation}
+\begin{equation}
+    u(\mathbf r) = \int_{-\infty}^{\infty} U(\mathbf q) e^{i \mathbf q \cdot \mathbf r} \mathrm d^3 \mathbf q \,.\label{eq:inv_fourier}
+\end{equation}
+With these integrals we mean to denote the integration over all components of $\mathbf r$ (or $\mathbf q$) where each integral extends from $-\infty$ to $\infty$, also, $\mathbf q \cdot \mathbf r$ represents the dot product between $\mathbf q$ and $\mathbf r$, i.e. $\mathbf q \cdot \mathbf r = q_x r_x + q_y r_y + q_z r_z$.
+
+For a temporal Fourier transformation we write a capital function letter, thus
+\begin{equation}
+    x(t) \stackrel{\mathcal F}{\longleftrightarrow} X(\omega) \,, \nonumber
+\end{equation}
+where we used $\stackrel{\mathcal F}{\longleftrightarrow}$ to mark a Fourier transformation.
+The transformations are then given by \cite[equations 4.8 \& 4.9]{signals_and_systems}:
+\begin{equation}
+    X(\omega) \coloneq \int_{-\infty}^{\infty} x(t) e^{-i\omega t} \mathrm d t \,, \label{eq:temporal_fourier_transform}
+\end{equation}
+\begin{equation}
+    x(t) \coloneq \frac{1}{2\pi} \int_{-\infty}^{\infty} X(\omega) e^{i\omega t} \mathrm d \omega \,. \label{eq:reverse_time_fourier}
+\end{equation}
+
+We also derive the spatial Fourier transformation of the Dirac delta function centered around $\mathbf 0$ (the origin), as we will use it in Section \ref{solving_helmholtz}:
+\begin{align}
+    \delta(\mathbf r) \stackrel{\mathcal F}{\longleftrightarrow} \mathcal F \{\delta\}(\mathbf q) &= \frac{1}{(2\pi)^3} \int_{-\infty}^\infty \delta(\mathbf r) e^{-i\mathbf q \cdot \mathbf r} \mathrm d^3 \mathbf r \nonumber \\
+    &= \frac{1}{(2\pi)^3} e^{-i\mathbf q \cdot \mathbf 0} = \frac{1}{(2\pi)^3} \,. \label{eq:fourier_delta}
+\end{align}
+
+
+\subsubsection{(anti)causality}
+For Section \ref{solving_helmholtz} we need to establish the definition of causality.
+We define a system to be \textbf{causal} if the output of the system at any time solely depends on the values of the input at present or past times \cite[Section 1.6.3]{signals_and_systems}.
+Similarly, a system is called \textbf{anticausal} if the output of the system at any time solely depends on the values of the input at present or future times.
+Thus, the system $y(t) = x(t)$ is causal as well as anticausal, $y(t) = x(t-t_0)$ with $t_0 \geq 0$ is causal but not anticausal, and $y(t) = x(t^2)$ is neither causal nor anticausal.
+
+Since Section \ref{solving_helmholtz} also uses the time shifting property of the temporal Fourier transform \cite[Section 4.3.2]{signals_and_systems} we derive the property here.
+% Starting with equation \ref{eq:reverse_time_fourier} and replacing $t$ by $t-t_0$ gives:
+We start with equation \ref{eq:reverse_time_fourier} and replace $t$ by $t-t_0$:
+\begin{align}
+    x(t-t_0) &= \int_{-\infty}^{\infty} X(\omega) e^{i\omega (t-t_0)} \mathrm d \omega \nonumber \\
+             &= \int_{-\infty}^{\infty} \left[ e^{-i\omega t_0} X(\omega) \right] e^{i\omega t} \mathrm d \omega \,. \nonumber
+\end{align}
+We can thus see that
+\begin{equation}
+    x(t-t_0) \stackrel{\mathcal F}{\longleftrightarrow} e^{-i\omega t_0} X(\omega) \,. \label{eq:time_shift}
+\end{equation}
+We end this section by noting that in the frequency domain, if we multiply $X(\omega)$ (which in this case denotes the Fourier transform of an input that solely depends on the present) by a negative exponent (i.e. $e^{-i\omega t_0}$ with $t_0 \geq 0$), we get a causal function in the time domain and vice versa.
+This will be important when we take on solving the Helmholtz equation in Section \ref{solving_helmholtz}.

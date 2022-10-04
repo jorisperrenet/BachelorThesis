@@ -1,0 +1,16 @@
+% \newcommand{\}{2}
+
+\begin{tikzpicture}[vector/.style={-stealth,black,ultra thick}]
+
+    \node at (0,0) {\huge $V$};
+    \begin{scope}[rotate=55]
+        \node at (0,-1.2) {\Large $S$};
+        \draw (-.1,1.1) -- (0,1.1);
+        \draw (-.1,1.1) -- (-.1,1);
+        \draw [vector,ultra thick] (0,1) -- (0,2);
+        \node at (.25,1.7) {\Large $\overrightarrow{\mathbf n}$};
+        \draw [ultra thick] (0,0) ellipse (2cm and 1cm);
+    \end{scope}
+
+\end{tikzpicture}
+

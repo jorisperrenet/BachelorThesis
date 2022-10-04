@@ -1,0 +1,45 @@
+\newcommand{\Radius}{1.6}
+
+\begin{tikzpicture}[axis/.style={->,blue,thick},
+                    vector/.style={-stealth,black,very thick}]
+	%draw the axes
+	\draw[axis] (0,0) -- (4,0) node[anchor=west]{$(x, y)$};
+	\draw[axis] (0,0) -- (0,2) node[anchor=west]{$z$};
+
+    \begin{scope}
+        \clip (.5-.5,0) rectangle (2*\Radius+.5+.05,\Radius+.05);
+        \draw [dashed, ultra thick] (\Radius+.5,0) circle(\Radius);
+        \draw [ultra thick] (.5,0) -- (2*\Radius+.5,0);
+    \end{scope}
+
+    \node at (.5+\Radius+.5,\Radius-.3) {\small$V$};
+    \node at (.9,\Radius-.25) {\small$S_1$};
+    \node at (2*\Radius+.2,-0.17) {\small$S_0$};
+    \draw[vector] (2*\Radius-.2,0) -- (2*\Radius-.2,-.7);
+    \draw (2*\Radius-.2+.1,-.1) -- (2*\Radius-.2+.1,0);
+    \draw (2*\Radius-.2+.1,-.1) -- (2*\Radius-.2,-.1);
+    \node at (2*\Radius,-0.6) {\small$\overrightarrow{\mathbf{n}}$};
+
+    \coordinate (A) at (2,1);
+    \coordinate (S) at (1,0);
+    \coordinate (B) at (2,-1);
+
+    \draw[vector] (A) -- (S);
+    \draw[vector] (B) -- (S);
+    \draw[dashed] (A) -- (B);
+
+    \draw[dashed] (2,0) -- (3.2,1.0583);
+    \node at (2.85,.5) {\small{$R$}};
+
+    \node[anchor=center] at (2,0.97) {\large\textbullet};
+    \node at (B) {\Large\textbullet};
+
+    \node at (2.2,1) {\small{$A$}};
+    \node at (2.2,-1) {\small{$A'$}};
+
+    \node[rotate=-45] at (1.4,-.6) {\footnotesize$\mathbf r_{S_0} - \mathbf r_{A'}$};
+    \node[rotate=45] at (1.4,.6) {\footnotesize$\mathbf r_{S_0} - \mathbf r_{A}$};
+
+\end{tikzpicture}
+
+

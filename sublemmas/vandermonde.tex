@@ -1,0 +1,447 @@
+\documentclass{book}
+
+\usepackage{geometry}
+\usepackage{FiraSans}
+\usepackage{mathpazo}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{hyperref}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+
+\geometry{a4paper, hscale=0.8}
+
+
+\begin{document}
+
+This is the proof that we can write calculate the Cotesian numbers as such:
+\begin{equation}
+    \begin{bmatrix}
+        1&0&0&\cdots&0 \\
+        1&1&1&\cdots&1 \\
+        1&2&2^2&\cdots&2^n \\
+        \vdots&\vdots & \vdots & \ddots & \vdots\\
+        1&n&n^2&\cdots&n^n
+    \end{bmatrix}^\top
+    \begin{bmatrix}
+        c_0\\
+        c_1\\
+        c_2\\
+        \vdots \\
+        c_n
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+        n/1 \\
+        n^2/2 \\
+        n^3/3 \\
+        \vdots \\
+        n^{n+1}/(n+1)
+    \end{bmatrix} \,.\nonumber
+\end{equation}
+Where the integral can by approximated by $h(c_0f_0+c_1f_2+\cdots+c_nf_n)$.
+\vspace{1em}
+
+\textit{Proof.}
+First, we interpolate the points $x_0, x_1, \dots, x_n$ with function values $f_0$, $f_1$, \dots, $f_n$ and let $h=\frac{x_1-x_0}{n}$.
+An interpolating polynomial can be written as $p(x)=p_0 + p_1 x + p_2 x^2 + \cdots + p_n x^n$, where the coefficients $p_i$ can be computed by solving:
+
+\begin{equation}
+    \underbrace{\begin{bmatrix}
+        1&x_0&x_0^2&\cdots&x_0^n \\
+        1&x_1&x_1^2&\cdots&x_1^n \\
+        1&x_2&x_2^2&\cdots&x_2^n \\
+        \vdots&\vdots & \vdots & \ddots & \vdots\\
+        1&x_n&x_n^2&\cdots&x_n^n
+    \end{bmatrix}}_{A}
+    \underbrace{\begin{bmatrix}
+        p_0\\
+        p_1\\
+        p_2\\
+        \vdots \\
+        p_n
+    \end{bmatrix}}_{\mathbf p}
+    =
+    \underbrace{\begin{bmatrix}
+        f_0 \\
+        f_1 \\
+        f_2 \\
+        \vdots \\
+        f_n
+    \end{bmatrix}}_{\mathbf f} \,.\nonumber
+\end{equation}
+
+Furthermore, the points $x_0, x_1, \dots, x_n$ are equidistant with spacing $h$, we can thus write $x_i=ih+x_0$. The integral over $p(x)$ can be written as:
+\begin{equation}
+    \int_{x_0}^{x_n} p(x) \mathrm d x =
+    \int_{x_0}^{x_0+nh} p(x) \mathrm d x =
+    \left[ p_0 x + p_1 \frac{x^2}{2} + p_2 \frac{x^3}{3} + \dots + p_n \frac{x^{n+1}}{n+1} \right]_{x_0}^{x_0+nh} \nonumber
+\end{equation}
+However, the interpolation can also be shifted such that $x_0 = 0$, the integral would not change, thus this is the same as:
+
+\textsc{We thus approximate the integral by $h(c_0f_0+c_1f_2+\cdots+c_nf_n)$.}
+\begin{equation}
+    p_0 \frac{nh}{1} + p_1 \frac{(nh)^2}{2} + p_2 \frac{(nh)^3}{3} + \dots + p_n \frac{(nh)^{n+1}}{n+1} = h(c_0 f_0 + c_1 f_2 + \cdots + c_n f_n) \nonumber
+\end{equation}
+Thus, in vector notation:
+\begin{equation}
+    \begin{bmatrix}
+        nh/1\\
+        (nh)^2/2\\
+        (nh)^3/3\\
+        \vdots \\
+        (nh)^{n+1}/(n+1)
+    \end{bmatrix}^\top
+    \begin{bmatrix}
+        p_0\\
+        p_1\\
+        p_2\\
+        \vdots \\
+        p_n
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+        hc_0 \\
+        hc_1 \\
+        hc_2 \\
+        \vdots \\
+        hc_n
+    \end{bmatrix}^\top
+    \begin{bmatrix}
+        f_0 \\
+        f_1 \\
+        f_2 \\
+        \vdots \\
+        f_n
+    \end{bmatrix} \,. \nonumber
+\end{equation}
+Removing $h$:
+\begin{equation}
+    \underbrace{\begin{bmatrix}
+        n/1\\
+        n^2h/2\\
+        n^3h^2/3\\
+        \vdots \\
+        n^{n+1}h^n/(n+1)
+    \end{bmatrix}^\top}_{\mathbf n^\top}
+    \begin{bmatrix}
+        p_0\\
+        p_1\\
+        p_2\\
+        \vdots \\
+        p_n
+    \end{bmatrix}
+    =
+    \underbrace{\begin{bmatrix}
+        c_0 \\
+        c_1 \\
+        c_2 \\
+        \vdots \\
+        c_n
+    \end{bmatrix}^\top}_{\mathbf c^\top}
+    \begin{bmatrix}
+        f_0 \\
+        f_1 \\
+        f_2 \\
+        \vdots \\
+        f_n
+    \end{bmatrix} \,.\nonumber
+\end{equation}
+
+Thus, in vector notation:
+\begin{equation}
+    A \mathbf p = \mathbf f \nonumber
+\end{equation}
+and
+\begin{equation}
+    \mathbf n ^\top \mathbf p = \mathbf c^\top \mathbf f \nonumber
+\end{equation}
+We can deduce that
+\begin{equation}
+    \mathbf p = A^{-1} \mathbf f \nonumber
+\end{equation}
+\begin{equation}
+    \mathbf n^\top \mathbf p = \mathbf n^\top A^{-1} \mathbf f = \mathbf c^\top \mathbf f \nonumber
+\end{equation}
+\begin{equation}
+    \mathbf f^\top (A^{-1})^\top \mathbf n  = \mathbf f^\top \mathbf c \nonumber
+\end{equation}
+\begin{equation}
+    (A^{-1})^\top \mathbf n  = \mathbf c \nonumber
+\end{equation}
+\begin{equation}
+    \mathbf n  = A^\top \mathbf c \nonumber
+\end{equation}
+Exactly what we wanted to prove considering that $x_0=0$ and $x_i = ih$ (writing out gives):
+\begin{equation}
+    \begin{bmatrix}
+        1&x_0&x_0^2&\cdots&x_0^n \\
+        1&x_1&x_1^2&\cdots&x_1^n \\
+        1&x_2&x_2^2&\cdots&x_2^n \\
+        \vdots&\vdots & \vdots & \ddots & \vdots\\
+        1&x_n&x_n^2&\cdots&x_n^n
+    \end{bmatrix}^\top
+    \begin{bmatrix}
+        c_0 \\
+        c_1 \\
+        c_2 \\
+        \vdots \\
+        c_n
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+        n/1\\
+        n^2h/2\\
+        n^3h^2/3\\
+        \vdots \\
+        n^{n+1}h^n/(n+1)
+    \end{bmatrix} \nonumber
+\end{equation}
+Thus, since $x_0=0$ and $x_i = ih$ we get
+\begin{equation}
+    \begin{bmatrix}
+        1&0&0&\cdots&0 \\
+        1&h&h^2&\cdots&h^n \\
+        1&2h&(2h)^2&\cdots&(2h)^n \\
+        \vdots&\vdots & \vdots & \ddots & \vdots\\
+        1&nh&(nh)^2&\cdots&(nh)^n
+    \end{bmatrix}^\top
+    \begin{bmatrix}
+        c_0 \\
+        c_1 \\
+        c_2 \\
+        \vdots \\
+        c_n
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+        n/1\\
+        n^2h/2\\
+        n^3h^2/3\\
+        \vdots \\
+        n^{n+1}h^n/(n+1)
+    \end{bmatrix} \nonumber
+\end{equation}
+Removing the factor of $h$ (we can do this easily since the matrix is transposed):
+\begin{equation}
+    \begin{bmatrix}
+        1&0&0&\cdots&0 \\
+        1&1&1^2&\cdots&1^n \\
+        1&2&2^2&\cdots&2^n \\
+        \vdots&\vdots & \vdots & \ddots & \vdots\\
+        1&n&n^2&\cdots&n^n
+    \end{bmatrix}^\top
+    \begin{bmatrix}
+        c_0 \\
+        c_1 \\
+        c_2 \\
+        \vdots \\
+        c_n
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+        n/1\\
+        n^2/2\\
+        n^3/3\\
+        \vdots \\
+        n^{n+1}/(n+1)
+    \end{bmatrix} \nonumber
+\end{equation}
+Concluding our proof.
+
+\pagebreak
+In the following equation:
+\begin{equation}
+    \begin{bmatrix}
+        1&0&0&\cdots&0 \\
+        1&1&1^2&\cdots&1^n \\
+        1&2&2^2&\cdots&2^n \\
+        \vdots&\vdots & \vdots & \ddots & \vdots\\
+        1&n&n^2&\cdots&n^n
+    \end{bmatrix}^\top
+    \begin{bmatrix}
+        c_0 \\
+        c_1 \\
+        c_2 \\
+        \vdots \\
+        c_n
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+        n/1\\
+        n^2/2\\
+        n^3/3\\
+        \vdots \\
+        n^{n+1}/(n+1)
+    \end{bmatrix} \nonumber
+\end{equation}
+We can calculate $c_i$ by:
+\begin{equation}
+    c_i =
+    \begin{dcases}
+        \frac{1}{(n-1)!}\sum\limits_{k=1}^{n+1} \frac{n^k s(n, k)}{k+1} & i = 0 \text{ or } i=n\\
+        \frac{1}{(n-1)!}\binom{n}{i}\sum\limits_{j=1}^{i+1} \sum\limits_{k=1}^{n-i} n^{j+k} \frac{s(i, j)s(n-i, k)}{(k+1)\binom{j+k+1}{k+1}} & \text{otherwise}
+    \end{dcases}\nonumber
+\end{equation}
+
+\vspace{2em}
+\textit{Proof.} We proof this now, rewriting the equation gives
+\begin{equation}
+    \begin{bmatrix}
+        c_0 \\
+        c_1 \\
+        c_2 \\
+        \vdots \\
+        c_n
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+        1&1&1&\cdots&1 \\
+        0&1&2&\cdots&n \\
+        0&1^2&2^2&\cdots&n^2 \\
+        \vdots&\vdots & \vdots & \ddots & \vdots\\
+        0&1^n&2^n&\cdots&n^n
+    \end{bmatrix}^{-1}
+    \begin{bmatrix}
+        n/1\\
+        n^2/2\\
+        n^3/3\\
+        \vdots \\
+        n^{n+1}/(n+1)
+    \end{bmatrix} \nonumber
+\end{equation}
+To go one step lower (up to $n-1$, for other reasons, the subscripts would get tedious) we define
+% \begin{equation}
+%     \underbrace{\begin{bmatrix}
+%         1&1&1&\cdots&1 \\
+%         0&1&2&\cdots&n-1 \\
+%         0&1^2&2^2&\cdots&(n-1)^2 \\
+%         \vdots&\vdots & \vdots & \ddots & \vdots\\
+%         0&1^{n-1}&2^{n-1}&\cdots&(n-1)^{n-1}
+%     \end{bmatrix}^{-1}}_{(W_n^{-1})^\top}
+% \end{equation}
+\begin{equation}
+    \underbrace{\begin{bmatrix}
+        1&1&1&\cdots&1 \\
+        0&1&2&\cdots&n \\
+        0&1^2&2^2&\cdots&n^2 \\
+        \vdots&\vdots & \vdots & \ddots & \vdots\\
+        0&1^n&2^n&\cdots&n^n
+    \end{bmatrix}^{-1}}_{(W_n^{-1})^\top} \nonumber
+\end{equation}
+
+By \url{https://proofwiki.org/wiki/Inverse_of_Vandermonde_Matrix} (which is 1-indexed, we are not, thus we do something ($n-1\to n$ and $j-1 \to j$ and $x_i \to x_{i-1}$ and $i-1 \to i$)) we have:
+\begin{equation}
+    \left[(W_n^{-1})^\top\right]_{ij} (\textrm{1-indexed}) = \begin{dcases}
+        (-1)^{j-1} \left[ \frac{\sum\limits_{\substack{1\leq m_1 < \dots < m_{n-j} \leq n \\ m_1, \dots, m_{n-j} \neq i}} x_{m_1} \cdot x_{m_2} \cdots x_{m_{n-j-1}} \cdot x_{m_{n-j}}}{\prod\limits_{\substack{1\leq m \leq n \\ m \neq i}} (x_m - x_i)} \right] & 1 \leq j < n \\
+        \frac{1}{\prod\limits_{\substack{1\leq m \leq n \\ m \neq i}} (x_i - x_m)} & j = n
+    \end{dcases} \nonumber
+\end{equation}
+We also have that the final answer can be written as:
+\begin{equation}
+    c_i = \sum_{j=1}^{n} \left[(W_n^{-1})^\top\right]_{ij} n^{j}/j \nonumber
+\end{equation}
+Equals (still 1-indexed), also $x_i = i - 1$
+\begin{equation}
+    c_i = \sum_{j=1}^{n} n^{j}/j \begin{dcases}
+        (-1)^{j-1} \left[ \frac{\sum\limits_{\substack{1\leq m_1 < \dots < m_{n-j} \leq n \\ m_1, \dots, m_{n-j} \neq i}} (m_1-1) \cdots (m_{n-j}-1)}{\prod\limits_{\substack{1\leq m \leq n \\ m \neq i}} (m - i)} \right] & 1 \leq j < n \\
+        \frac{1}{\prod\limits_{\substack{1\leq m \leq n \\ m \neq i}} (i - m)} & j = n
+    \end{dcases} \nonumber
+\end{equation}
+
+For $i=1$ (remember, 1-indexed):
+\begin{align}
+    c_0 &= \sum_{j=1}^{n} n^{j}/j \begin{dcases}
+        (-1)^{j-1} \left[ \frac{\sum\limits_{\substack{1\leq m_1 < \dots < m_{n-j} \leq n \\ m_1, \dots, m_{n-j} \neq 1}} (m_1-1) \cdots (m_{n-j}-1)}{\prod\limits_{\substack{1\leq m \leq n \\ m \neq 1}} (m - 1)} \right] & 1 \leq j < n \\
+        \frac{1}{\prod\limits_{\substack{1\leq m \leq n \\ m \neq 1}} (1 - m)} & j = n
+    \end{dcases} \nonumber \\
+        &= \sum_{j=1}^{n} n^{j}/j \begin{dcases}
+        (-1)^{j-1} \left[ \frac{\sum\limits_{\substack{1\leq m_1 < \dots < m_{n-j} \leq n \\ m_1, \dots, m_{n-j} \neq 1}} (m_1-1) \cdots (m_{n-j}-1)}{\prod\limits_{1\leq m' \leq n-1} (m')} \right] & 1 \leq j < n \\
+        \frac{1}{\prod\limits_{1\leq m' \leq n-1} (-m')} & j = n
+    \end{dcases} \nonumber \\
+        &= \frac{1}{(n-1)!} \sum_{j=1}^{n} n^{j}/j \begin{dcases}
+        (-1)^{j-1} \left[ \sum\limits_{1 \leq m_1' < \dots < m_{n-j}' \leq n-1} m_1' \cdots m_{n-j}' \right] & 1 \leq j < n \\
+        (-1)^{n-1} & j = n
+    \end{dcases} \nonumber \\
+        &= \frac{1}{(n-1)!} \sum_{j=1}^{n} n^{j}/j \begin{dcases}
+        (-1)^{j-1} \left[ (-1)^{j-1} s(n-1, j-1) \right] & 1 \leq j < n \\
+        (-1)^{n-1} & j = n
+    \end{dcases} \nonumber \\
+        &= \frac{1}{(n-1)!} \sum_{j=1}^{n} n^{j}/j \begin{dcases}
+        s(n-1, j-1) & 1 \leq j < n \\
+        (-1)^{n-1} & j = n
+    \end{dcases} \nonumber
+\end{align}
+
+
+
+
+
+
+\clearpage
+Equalling:
+\begin{equation}
+    \left[(W_n^{-1})^\top\right]_{ij} = \begin{dcases}
+        (-1)^{j} \left[ \frac{\sum\limits_{\substack{1\leq m_1 < \dots < m_{n-j} \leq n+1 \\ m_1, \dots, m_{n-j} \neq i+1}} x_{m_1-1} \cdot x_{m_2-1} \cdots x_{m_{n-j-1}-1} \cdot x_{m_{n-j}-1}}{\prod\limits_{\substack{1\leq m \leq n+1 \\ m \neq i+1}} (x_{m-1} - x_{i})} \right] & 0 \leq j < n \\
+        \frac{1}{\prod\limits_{\substack{1\leq m \leq n+1 \\ m \neq i+1}} (x_{i} - x_{m-1})} & j = n
+    \end{dcases} \nonumber
+\end{equation}
+With $x_0 = 0$, $x_1 = 1$, \dots, $x_n = n$, note that also $x_i = i$.
+Filling in gives (and $m_{i}-1 \to m_{i}$):
+\begin{equation}
+    \left[(W_n^{-1})^\top\right]_{ij} = \begin{dcases}
+        (-1)^{j} \left[ \frac{\sum\limits_{\substack{0\leq m_1 < \dots < m_{n-j} \leq n \\ m_1, \dots, m_{n-j} \neq i}} m_1 \cdot m_2 \cdots m_{n-j-1} \cdot m_{n-j}}{\prod\limits_{\substack{0\leq m \leq n \\ m \neq i}} (m - i)} \right] & 0 \leq j < n \\
+        \frac{1}{\prod\limits_{\substack{0\leq m \leq n \\ m \neq i}} (i - m)} & j = n
+    \end{dcases} \nonumber
+\end{equation}
+We also have that the final answer can be written as:
+\begin{equation}
+    c_i = \sum_{j=0}^{n} \left[(W_n^{-1})^\top\right]_{ij} n^{j+1}/(j+1) \nonumber
+\end{equation}
+Thus:
+\begin{equation}
+    c_i = \sum_{j=0}^{n} n^{j+1}/(j+1) \begin{dcases}
+        (-1)^{j} \left[ \frac{\sum\limits_{\substack{0\leq m_1 < \dots < m_{n-j} \leq n \\ m_1, \dots, m_{n-j} \neq i}} m_1 \cdot m_2 \cdots m_{n-j-1} \cdot m_{n-j}}{\prod\limits_{\substack{0\leq m \leq n \\ m \neq i}} (m - i)} \right] & 0 \leq j < n \\
+        \frac{1}{\prod\limits_{\substack{0\leq m \leq n \\ m \neq i}} (i - m)} & j = n
+    \end{dcases} \nonumber
+\end{equation}
+
+
+\clearpage
+For the case $i=0$, we get:
+\begin{align}
+    c_i &= \sum_{j=0}^{n} n^{j+1}/(j+1) \begin{dcases}
+        (-1)^{j} \left[ \frac{\sum\limits_{\substack{0\leq m_1 < \dots < m_{n-j} \leq n \\ m_1, \dots, m_{n-j} \neq i}} m_1 \cdot m_2 \cdots m_{n-j-1} \cdot m_{n-j}}{\prod\limits_{\substack{0\leq m \leq n \\ m \neq i}} (m - i)} \right] & 0 \leq j < n \\
+        \frac{1}{\prod\limits_{\substack{0\leq m \leq n \\ m \neq i}} (i - m)} & j = n
+    \end{dcases} \nonumber \\
+        &= \sum_{j=0}^{n} n^{j+1}/(j+1) \begin{dcases}
+        (-1)^{j} \left[ \frac{\sum\limits_{1\leq m_1 < \dots < m_{n-j} \leq n} m_1 \cdot m_2 \cdots m_{n-j-1} \cdot m_{n-j}}{\prod\limits_{\substack{1\leq m \leq n}} m} \right] & 0 \leq j < n \\
+        \frac{1}{\prod\limits_{1\leq m \leq n} (- m)} & j = n
+    \end{dcases} \nonumber \\
+        &= \frac{1}{n!} \sum_{j=0}^{n} n^{j+1}/(j+1) \begin{dcases}
+        (-1)^{j} \left[ \sum\limits_{1\leq m_1 < \dots < m_{n-j} \leq n} m_1 \cdot m_2 \cdots m_{n-j-1} \cdot m_{n-j} \right] & 0 \leq j < n \\
+        (-1)^n & j = n
+    \end{dcases} \nonumber \\
+        &= \frac{1}{n!} \sum_{j=0}^{n} n^{j+1}/(j+1) \begin{dcases}
+        (-1)^{j} \left[ (-1)^{j+1} s(n, j) \right] & 0 \leq j < n \\
+        (-1)^n & j = n
+    \end{dcases} \nonumber \\
+        &= \frac{1}{(n-1)!} \sum_{j=0}^{n} n^{j}/(j+1) \begin{dcases}
+        (-1)^{j} \left[ (-1)^{j+1} s(n, j) \right] & 0 \leq j < n \\
+        (-1)^n & j = n
+    \end{dcases} \nonumber \\
+        &= \frac{1}{(n-1)!} \sum_{j=0}^{n} n^{j}/(j+1) \begin{dcases}
+        s(n, j) & 0 \leq j < n \\
+        (-1)^n & j = n
+    \end{dcases} \nonumber
+\end{align}
+
+
+
+
+
+
+
+\end{document}
