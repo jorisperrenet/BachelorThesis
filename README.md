@@ -1,6 +1,6 @@
 # Methods for reducing error in approximations of the Rayleigh integral
 This is the uncompiled version of my Bachelor Thesis at the TUDelft.
-(The compiled version can be viewed here as the file `Approximating_Rayleigh_Integrals_Joris_Perrenet.pdf` and in the [repository](http://resolver.tudelft.nl/uuid:c48fa27f-d91b-4c07-a74b-6ac6762bc095))
+(The compiled version can be viewed here as the file [`Approximating_Rayleigh_Integrals_Joris_Perrenet.pdf`](https://github.com/jorisperrenet/BachelorThesis/blob/main/Approximating_Rayleigh_Integrals_Joris_Perrenet.pdf) and in the [repository](http://resolver.tudelft.nl/uuid:c48fa27f-d91b-4c07-a74b-6ac6762bc095))
 
 Also, a huge thanks to [VimTeX](https://github.com/lervag/vimtex) for making it so easy to compile my tex files and interacting with [zathura](https://github.com/pwmt/zathura) enabling hot reload. It allowed me to edit my thesis in [NeoVim](https://github.com/neovim/neovim) whilst only needing to save the file in order to see the changes in my pdf-viewer.
 
